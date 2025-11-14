@@ -66,6 +66,14 @@
 #define NVS_CONFIG_OTP_SESSION_KEY "otp_sess_key"
 #define NVS_CONFIG_OTP_BOOT_ID "otp_boot_id"
 
+// Ethernet configuration keys
+#define NVS_CONFIG_NETWORK_MODE "network_mode"
+#define NVS_CONFIG_ETH_USE_DHCP "eth_dhcp"
+#define NVS_CONFIG_ETH_STATIC_IP "eth_static_ip"
+#define NVS_CONFIG_ETH_GATEWAY "eth_gateway"
+#define NVS_CONFIG_ETH_SUBNET "eth_subnet"
+#define NVS_CONFIG_ETH_DNS "eth_dns"
+
 #if defined(CONFIG_FAN_MODE_MANUAL)
 #define CONFIG_AUTO_FAN_SPEED_VALUE 0
 #elif defined(CONFIG_FAN_MODE_CLASSIC)
@@ -222,6 +230,28 @@ namespace Config {
 
     inline void setOTPEnabled(bool value) { nvs_config_set_u16(NVS_CONFIG_OTP_ENABLED, value ? 1 : 0); }
     inline bool isOTPEnabled() { return nvs_config_get_u16(NVS_CONFIG_OTP_ENABLED, 0) != 0; }
+
+    // ---- Ethernet Configuration ----
+    // Network mode: "wifi" or "ethernet"
+    inline char* getNetworkMode() { return nvs_config_get_string(NVS_CONFIG_NETWORK_MODE, "wifi"); }
+    inline void setNetworkMode(const char* value) { nvs_config_set_string(NVS_CONFIG_NETWORK_MODE, value); }
+
+    // Ethernet DHCP setting
+    inline bool isEthUseDHCP() { return nvs_config_get_u16(NVS_CONFIG_ETH_USE_DHCP, 1) != 0; }
+    inline void setEthUseDHCP(bool value) { nvs_config_set_u16(NVS_CONFIG_ETH_USE_DHCP, value ? 1 : 0); }
+
+    // Ethernet static IP configuration
+    inline char* getEthStaticIP() { return nvs_config_get_string(NVS_CONFIG_ETH_STATIC_IP, "192.168.1.121"); }
+    inline void setEthStaticIP(const char* value) { nvs_config_set_string(NVS_CONFIG_ETH_STATIC_IP, value); }
+
+    inline char* getEthGateway() { return nvs_config_get_string(NVS_CONFIG_ETH_GATEWAY, "192.168.1.1"); }
+    inline void setEthGateway(const char* value) { nvs_config_set_string(NVS_CONFIG_ETH_GATEWAY, value); }
+
+    inline char* getEthSubnet() { return nvs_config_get_string(NVS_CONFIG_ETH_SUBNET, "255.255.255.0"); }
+    inline void setEthSubnet(const char* value) { nvs_config_set_string(NVS_CONFIG_ETH_SUBNET, value); }
+
+    inline char* getEthDNS() { return nvs_config_get_string(NVS_CONFIG_ETH_DNS, "8.8.8.8"); }
+    inline void setEthDNS(const char* value) { nvs_config_set_string(NVS_CONFIG_ETH_DNS, value); }
 
     void migrate_config();
 }

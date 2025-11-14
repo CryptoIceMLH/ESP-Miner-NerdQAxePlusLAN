@@ -19,6 +19,13 @@
 //#define OVERHEAT_DEFAULT 70 // Default overheat threshold in degrees Celsius
 
 class System {
+  public:
+    // Ethernet interface types (must be public for use in main.cpp)
+    typedef enum {
+        NETWORK_MODE_WIFI = 0,
+        NETWORK_MODE_ETHERNET = 1
+    } NetworkMode;
+
   protected:
     // Hashrate and timing
     double m_currentHashrate10m; // Current hashrate averaged over 10 minutes
@@ -51,6 +58,13 @@ class System {
     bool m_apState;
     char *m_hostname;
     char m_ipAddress[IP4ADDR_STRLEN_MAX] = "0.0.0.0";
+
+    NetworkMode m_networkMode;
+    bool m_ethAvailable;
+    bool m_ethLinkUp;
+    bool m_ethConnected;
+    char m_ethIpAddress[IP4ADDR_STRLEN_MAX];
+    char m_ethMacAddress[18];
 
     StratumConfig m_stratumConfig[2];
 
@@ -267,6 +281,24 @@ class System {
     const char* getIPAddress() {
         return (const char*) m_ipAddress;
     }
+
+    // Ethernet getters and setters
+    NetworkMode getNetworkMode() const { return m_networkMode; }
+    void setNetworkMode(NetworkMode mode) { m_networkMode = mode; }
+    bool isEthernetAvailable() const { return m_ethAvailable; }
+    void setEthAvailable(bool available) { m_ethAvailable = available; }
+    bool isEthernetLinkUp() const { return m_ethLinkUp; }
+    bool isEthernetConnected() const { return m_ethConnected; }
+    const char* getEthernetIP() const { return m_ethIpAddress; }
+    const char* getEthernetMAC() const { return m_ethMacAddress; }
+    void setEthMacAddress(const char* mac) {
+        if (mac) {
+            strncpy(m_ethMacAddress, mac, sizeof(m_ethMacAddress) - 1);
+            m_ethMacAddress[sizeof(m_ethMacAddress) - 1] = '\0';
+        }
+    }
+
+    void updateEthernetStatus();
 
     void loadSettings();
 

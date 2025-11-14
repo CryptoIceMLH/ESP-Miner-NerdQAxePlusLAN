@@ -15,24 +15,24 @@ export class AppComponent {
     private translate: TranslateService,
     private store: Store<fromI18n.State>
   ) {
-    // Set available languages
-    translate.addLangs(['en', 'fr', 'es', 'de', 'it', 'ro']);
-
-    // Set default language
+    translate.addLangs(['en', 'fr', 'es', 'de']);
     translate.setDefaultLang('en');
 
-    // Get language from localStorage or use browser language
-    const savedLang = localStorage.getItem('language');
     const browserLang = navigator.language.split('-')[0];
-    const defaultLang = savedLang || (translate.getLangs().includes(browserLang) ? browserLang : 'en');
+    const storedLang = localStorage.getItem('language');
 
-    translate.use(defaultLang);
+    if (storedLang) {
+      translate.use(storedLang);
+    } else if (translate.getLangs().includes(browserLang)) {
+      translate.use(browserLang);
+    } else {
+      translate.use('en');
+    }
 
-    // Listen to language changes from store
-    this.store.select(fromI18n.selectLanguage).subscribe(language => {
-      if (language) {
-        translate.use(language);
-        localStorage.setItem('language', language);
+    this.store.select(fromI18n.selectLanguage).subscribe(lang => {
+      if (lang) {
+        translate.use(lang);
+        localStorage.setItem('language', lang);
       }
     });
   }

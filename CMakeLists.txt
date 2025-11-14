@@ -40,6 +40,7 @@ include_directories("./components/arduinojson")
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 
+set(PROJECT_VER "ESP-Miner-NerdQAxePlus-V3.1-Lan")
 
 project(esp-miner)
 

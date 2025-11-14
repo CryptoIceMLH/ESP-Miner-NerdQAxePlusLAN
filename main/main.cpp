@@ -11,6 +11,7 @@
 #include "asic_jobs.h"
 #include "asic_result_task.h"
 #include "boards/board.h"
+#include "connect.h"
 #include "boards/nerdaxe.h"
 #include "boards/nerdaxegamma.h"
 #include "boards/nerdeko.h"
@@ -80,8 +81,68 @@ bool is_time_synced(void)
     return (sntp.isTimeSynced() && now() >= 1609459200);
 }
 
-static void setup_wifi()
+static void setup_network()
 {
+    // Initialize network infrastructure ONCE before any interface init (BitAxe approach)
+    network_infrastructure_init();
+
+#ifdef CONFIG_ENABLE_ETHERNET
+    // Check network mode preference from NVS
+    char *network_mode_str = Config::getNetworkMode();
+    MemoryGuard gNetworkMode(network_mode_str);
+
+    bool use_ethernet = (strcmp(network_mode_str, "ethernet") == 0);
+
+    if (use_ethernet) {
+        ESP_LOGI(TAG, "Network mode: Ethernet - Initializing...");
+        SYSTEM_MODULE.setNetworkMode(System::NETWORK_MODE_ETHERNET);
+
+        // Initialize Ethernet
+        ethernet_init_for_nerdaxe();
+
+        // Check if W5500 hardware is detected
+        SYSTEM_MODULE.setEthAvailable(ethernet_is_available());
+        ESP_LOGI(TAG, "DEBUG: After ethernet_init, eth_available = %d", SYSTEM_MODULE.isEthernetAvailable());
+
+        if (SYSTEM_MODULE.isEthernetAvailable()) {
+            ESP_LOGI(TAG, "W5500 hardware detected, waiting for Ethernet IP address...");
+
+            // Get Ethernet MAC address
+            char eth_mac[18];
+            if (ethernet_get_mac(eth_mac, sizeof(eth_mac))) {
+                SYSTEM_MODULE.setEthMacAddress(eth_mac);
+                ESP_LOGI(TAG, "Ethernet MAC: %s", eth_mac);
+            }
+
+            // Wait for Ethernet IP (up to 10 seconds)
+            char ip_buf[20];
+            int retry_count = 0;
+            while (retry_count < 100) {  // Wait up to 10 seconds (100 * 100ms)
+                SYSTEM_MODULE.updateEthernetStatus();
+                if (ethernet_get_ip(ip_buf, sizeof(ip_buf))) {
+                    ESP_LOGI(TAG, "Ethernet connected with IP: %s", ip_buf);
+                    start_rest_server(NULL);
+                    return;  // Success!
+                }
+                vTaskDelay(pdMS_TO_TICKS(100));
+                retry_count++;
+            }
+
+            ESP_LOGW(TAG, "Ethernet timeout after 10 seconds, falling back to WiFi");
+        } else {
+            ESP_LOGW(TAG, "W5500 hardware not detected, initializing WiFi fallback");
+        }
+
+        // Explicit WiFi fallback initialization
+        ESP_LOGI(TAG, "Switching to WiFi mode...");
+        SYSTEM_MODULE.setNetworkMode(System::NETWORK_MODE_WIFI);
+    }
+#endif
+
+    // WiFi mode (default or fallback from Ethernet)
+    ESP_LOGI(TAG, "Network mode: WiFi");
+    SYSTEM_MODULE.setNetworkMode(System::NETWORK_MODE_WIFI);
+
     // pull the wifi credentials and hostname out of NVS
     char *wifi_ssid = Config::getWifiSSID();
     char *wifi_pass = Config::getWifiPass();
@@ -97,6 +158,15 @@ static void setup_wifi()
 
     // init and connect to wifi (asynchronous setup)
     wifi_init(wifi_ssid, wifi_pass, hostname);
+
+#ifdef CONFIG_ENABLE_ETHERNET
+    // Detect W5500 hardware availability for UI even when in WiFi mode
+    // Following BitAxe approach: detect after WiFi init to avoid boot conflicts
+    if (!use_ethernet) {
+        SYSTEM_MODULE.setEthAvailable(true);  // Assume hardware present (will validate on mode switch)
+        ESP_LOGI(TAG, "W5500 Ethernet hardware marked as available for UI");
+    }
+#endif
 
     // start rest server (needed in AP fallback for config)
     start_rest_server(NULL);
@@ -222,6 +292,10 @@ extern "C" void app_main(void)
     Board *board = new NerdQX();
 #endif
 
+    // Initialize network infrastructure FIRST (before display/board init)
+    // This prevents boot loop when Ethernet mode is selected
+    setup_network();
+
     // initialize everything non-asic-specific like
     // fan and serial and load settings from nvs
     board->loadSettings();
@@ -245,17 +319,12 @@ extern "C" void app_main(void)
     xTaskCreate(SYSTEM_MODULE.taskWrapper, "SYSTEM_task", 4096, &SYSTEM_MODULE, 3, NULL);
     xTaskCreate(POWER_MANAGEMENT_MODULE.taskWrapper, "power mangement", 8192, (void *) &POWER_MANAGEMENT_MODULE, 10, NULL);
 
-    setup_wifi();
-
     // set the startup_done flag
     SYSTEM_MODULE.setStartupDone();
 
     // when a username is configured we will continue with startup and start mining
     const char *username = Config::nvs_config_get_string(NVS_CONFIG_STRATUM_USER, NULL); // TODO
     if (username) {
-        // wifi is connected, switch the AP off
-        wifi_softap_off();
-
         discordAlerter.init();
         discordAlerter.loadConfig();
 

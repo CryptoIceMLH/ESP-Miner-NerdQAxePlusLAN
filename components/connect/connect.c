@@ -14,6 +14,18 @@
 
 #include "connect.h"
 
+// Forward declaration for C linkage (nvs_config.cpp functions)
+#ifdef __cplusplus
+extern "C" {
+#endif
+char* nvs_config_get_string(const char* key, const char* default_value);
+#ifdef __cplusplus
+}
+#endif
+
+// NVS config key
+#define NVS_CONFIG_HOSTNAME "hostname"
+
 void MINER_set_wifi_status(wifi_status_t status, uint16_t retry_count);
 void MINER_set_ap_status(bool state);
 
@@ -71,6 +83,14 @@ const char* connect_get_mac_addr() {
     return s_mac_addr;
 }
 
+void network_infrastructure_init(void)
+{
+    ESP_LOGI(TAG, "Initializing network infrastructure (netif + event loop)");
+    ESP_ERROR_CHECK(esp_netif_init());
+    ESP_ERROR_CHECK(esp_event_loop_create_default());
+    ESP_LOGI(TAG, "Network infrastructure initialized successfully");
+}
+
 static void event_handler(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data)
 {
     if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
@@ -102,6 +122,10 @@ static void event_handler(void *arg, esp_event_base_t event_base, int32_t event_
         s_retry_num = 0;
         xEventGroupSetBits(s_wifi_event_group, WIFI_CONNECTED_BIT);
         MINER_set_wifi_status(WIFI_CONNECTED, 0);
+
+        // Disable WiFi AP mode after successful connection (security fix)
+        wifi_softap_off();
+        ESP_LOGI(TAG, "WiFi AP mode disabled after successful connection");
     }
 }
 
@@ -204,8 +228,8 @@ void wifi_init(const char *wifi_ssid, const char *wifi_pass, const char *hostnam
 
     strcpy(s_ip_addr, "0.0.0.0");
 
-    ESP_ERROR_CHECK(esp_netif_init());
-    ESP_ERROR_CHECK(esp_event_loop_create_default());
+    // Note: Network infrastructure (esp_netif_init and event_loop) should be
+    // initialized by calling network_infrastructure_init() before this function
 
     esp_event_handler_instance_t instance_any_id;
     esp_event_handler_instance_t instance_got_ip;
@@ -260,3 +284,91 @@ EventBits_t wifi_connect(void)
 
     return bits;
 }
+
+// ============================================================================
+// Ethernet W5500 Integration Functions
+// ============================================================================
+
+#ifdef CONFIG_ENABLE_ETHERNET
+#include "ethernet_w5500.h"
+
+static const char *ETH_TAG = "ethernet";
+
+/**
+ * Initialize W5500 Ethernet module for NerdQAxePlus
+ * This wraps the ethernet_w5500_init() function.
+ * Note: network_infrastructure_init() must be called before this function.
+ */
+void ethernet_init_for_nerdaxe(void) {
+    ESP_LOGI(ETH_TAG, "Initializing W5500 Ethernet for NerdQAxePlus...");
+
+    // Note: Network infrastructure (esp_netif_init and event_loop) should be
+    // initialized by calling network_infrastructure_init() before this function
+
+    // Initialize W5500 Ethernet driver
+    esp_err_t ret = ethernet_w5500_init();
+    if (ret != ESP_OK) {
+        ESP_LOGE(ETH_TAG, "Ethernet init failed: %s", esp_err_to_name(ret));
+    } else {
+        ESP_LOGI(ETH_TAG, "W5500 Ethernet initialized successfully");
+
+        // Set hostname on Ethernet interface
+        esp_netif_t *eth_netif = ethernet_w5500_get_netif();
+        if (eth_netif) {
+            char *hostname = nvs_config_get_string(NVS_CONFIG_HOSTNAME, "NerdQAxe");
+            if (hostname) {
+                ret = esp_netif_set_hostname(eth_netif, hostname);
+                if (ret == ESP_OK) {
+                    ESP_LOGI(ETH_TAG, "Ethernet hostname set to: %s", hostname);
+                } else {
+                    ESP_LOGW(ETH_TAG, "Failed to set hostname: %s", esp_err_to_name(ret));
+                }
+                free(hostname);
+            }
+        }
+
+        vTaskDelay(pdMS_TO_TICKS(500));  // Give W5500 time to stabilize before display init
+    }
+}
+
+/**
+ * Check if Ethernet is connected (has IP address)
+ */
+bool ethernet_is_connected(void) {
+    return ethernet_w5500_is_connected();
+}
+
+/**
+ * Check if W5500 hardware is available/detected
+ */
+bool ethernet_is_available(void) {
+    return ethernet_w5500_is_available();
+}
+
+/**
+ * Get current Ethernet IP address
+ * Returns true if IP is valid, false otherwise
+ */
+bool ethernet_get_ip(char* buf, size_t len) {
+    if (buf == NULL || len == 0) {
+        return false;
+    }
+
+    esp_err_t ret = ethernet_w5500_get_ip(buf, len);
+    return (ret == ESP_OK);
+}
+
+/**
+ * Get Ethernet MAC address
+ * Returns true if MAC is valid, false otherwise
+ */
+bool ethernet_get_mac(char* buf, size_t len) {
+    if (buf == NULL || len == 0) {
+        return false;
+    }
+
+    esp_err_t ret = ethernet_w5500_get_mac(buf, len);
+    return (ret == ESP_OK);
+}
+
+#endif // CONFIG_ENABLE_ETHERNET

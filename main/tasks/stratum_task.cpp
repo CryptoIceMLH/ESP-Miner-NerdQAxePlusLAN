@@ -21,6 +21,12 @@
 #include "system.h"
 #include "macros.h"
 
+#ifdef CONFIG_ENABLE_ETHERNET
+extern "C" {
+    #include "ethernet_w5500.h"
+}
+#endif
+
 // fallback can nicely be tested with netcat
 // mkfifo /tmp/ncpipe
 // nc -l -p 4444 < /tmp/ncpipe | nc solo.ckpool.org 3333 > /tmp/ncpipe
@@ -64,6 +70,14 @@ StratumTask::StratumTask(StratumManager *manager, int index, StratumConfig *conf
 
 bool StratumTask::isWifiConnected()
 {
+#ifdef CONFIG_ENABLE_ETHERNET
+    // Check if in Ethernet mode and Ethernet is connected
+    if (ethernet_w5500_is_available() && ethernet_w5500_is_connected()) {
+        return true;  // Treat Ethernet connection as "connected"
+    }
+#endif
+
+    // Check WiFi connection
     wifi_ap_record_t ap_info;
     return esp_wifi_sta_get_ap_info(&ap_info) == ESP_OK;
 }
@@ -209,9 +223,17 @@ void StratumTask::task()
             continue;
         }
 
-        // check if wifi is connected
-        // esp_wifi_connect is thread safe
+        // check if network is connected (WiFi or Ethernet)
         if (!isWifiConnected()) {
+#ifdef CONFIG_ENABLE_ETHERNET
+            // If Ethernet is available, just wait - no need to reconnect WiFi
+            if (ethernet_w5500_is_available()) {
+                ESP_LOGI(m_tag, "Waiting for Ethernet connection...");
+                vTaskDelay(pdMS_TO_TICKS(10000));
+                continue;
+            }
+#endif
+            // WiFi mode: attempt to reconnect
             ESP_LOGI(m_tag, "WiFi disconnected, attempting to reconnect...");
             esp_wifi_connect();
             vTaskDelay(pdMS_TO_TICKS(10000));

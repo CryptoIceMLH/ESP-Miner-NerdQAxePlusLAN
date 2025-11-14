@@ -1,4 +1,6 @@
 @import '../../@theme/styles/themes';
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
 @import 'bootstrap/scss/mixins/breakpoints';
 //@import '~@nebular/theme/styles/global/_breakpoints';
 
@@ -170,5 +172,228 @@
     }
 
     .btn-support { user-select: none; }
+
+    // Network Status Banner Styles
+    .network-status-banner {
+        margin-bottom: 1.5rem;
+
+        .status-content {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1rem;
+            font-weight: 500;
+
+            nb-icon {
+                font-size: 1.5rem;
+            }
+        }
+    }
+
+    // Network Mode Buttons
+    .network-mode-buttons {
+        display: flex;
+        gap: 0.75rem;
+        margin-bottom: 0.5rem;
+
+        button {
+            width: auto;
+            min-width: 140px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+
+            nb-icon {
+                font-size: 1.25rem;
+            }
+        }
+    }
+
+    .form-hint {
+        display: block;
+        font-size: 0.875rem;
+        color: nb-theme(text-hint-color);
+        margin-top: 0.25rem;
+        margin-left: 0;
+
+        &.warning {
+            color: nb-theme(color-warning-default);
+        }
+    }
+
+    // Section Divider
+    .section-divider {
+        border: none;
+        border-top: 1px solid nb-theme(border-basic-color-3);
+        margin: 1.5rem 0;
+    }
+
+    // Network Section Styles
+    .network-section {
+        margin-bottom: 1.5rem;
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: nb-theme(color-primary-default);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid nb-theme(border-basic-color-3);
+
+            nb-icon {
+                font-size: 1.5rem;
+            }
+        }
+    }
+
+    // WiFi Status Display
+    .wifi-status {
+        background-color: nb-theme(background-basic-color-2);
+        border-radius: 0.5rem;
+        padding: 1rem;
+        margin-top: 1rem;
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid nb-theme(border-basic-color-3);
+
+            &:last-child {
+                border-bottom: none;
+            }
+
+            .status-label {
+                font-weight: 500;
+                color: nb-theme(text-hint-color);
+            }
+
+            .status-value {
+                font-weight: 600;
+                color: nb-theme(text-basic-color);
+
+                &.connected {
+                    color: nb-theme(color-success-default);
+                }
+            }
+        }
+    }
+
+    // Ethernet Status Grid
+    .ethernet-status-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1rem;
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background-color: nb-theme(background-basic-color-2);
+            border-radius: 0.5rem;
+            border: 1px solid nb-theme(border-basic-color-3);
+
+            .indicator-label {
+                font-size: 0.875rem;
+                font-weight: 500;
+                color: nb-theme(text-hint-color);
+            }
+
+            .indicator-dot {
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                background-color: nb-theme(color-danger-default);
+                transition: background-color 0.3s ease;
+
+                &.active {
+                    background-color: nb-theme(color-success-default);
+                    box-shadow: 0 0 8px nb-theme(color-success-default);
+                }
+            }
+
+            .indicator-text {
+                font-size: 0.875rem;
+                font-weight: 600;
+                color: nb-theme(text-basic-color);
+            }
+        }
+    }
+
+    // Ethernet Info Display
+    .ethernet-info {
+        background-color: nb-theme(background-basic-color-2);
+        border-radius: 0.5rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid nb-theme(border-basic-color-3);
+
+            &:last-child {
+                border-bottom: none;
+            }
+
+            .info-label {
+                font-weight: 500;
+                color: nb-theme(text-hint-color);
+            }
+
+            .info-value {
+                font-weight: 600;
+                font-family: monospace;
+                color: nb-theme(text-basic-color);
+            }
+        }
+    }
+
+    // Static IP Section
+    .static-ip-section {
+        background-color: nb-theme(background-basic-color-2);
+        border-radius: 0.5rem;
+        padding: 1rem;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 1px solid nb-theme(border-basic-color-3);
+    }
+
+    // Toggle Wrapper
+    .toggle-wrapper {
+        display: flex;
+        align-items: center;
+
+        nb-toggle {
+            margin-right: 0.5rem;
+        }
+    }
+
+    // Responsive adjustments
+    @include media-breakpoint-down(md) {
+        .network-mode-buttons {
+            flex-direction: column;
+
+            button {
+                width: 100%;
+            }
+        }
+
+        .ethernet-status-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .form-label {
+            flex: 0 0 80px;
+            font-size: 0.875rem;
+        }
+    }
 
 }

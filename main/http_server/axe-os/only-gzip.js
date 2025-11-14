@@ -14,8 +14,9 @@ fs.readdir(directory, (err, files) => {
 
             if (stats.isDirectory()) {
                 // NOP
-            } else if (!file.endsWith('.gz')) {
-                // If it's a file and doesn't end with .gz, unlink it
+            } else if (!file.endsWith('.gz') && !file.endsWith('.json')) {
+                // If it's a file and doesn't end with .gz or .json, unlink it
+                // Keep .json files for translation compatibility
                 fs.unlink(filePath, (err) => {
                     if (err) throw err;
                     console.log(`Removed file: ${filePath}`);

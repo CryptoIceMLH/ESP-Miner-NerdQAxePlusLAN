@@ -28,6 +28,7 @@ typedef enum
     WIFI_RETRYING,
 } wifi_status_t;
 
+void network_infrastructure_init(void);
 void wifi_softap_on(void);
 void wifi_softap_off(void);
 void wifi_init(const char *wifi_ssid, const char *wifi_pass, const char *hostname);
@@ -36,6 +37,15 @@ void generate_ssid(char *ssid);
 bool connect_get_ip_addr(char *buf, size_t buf_len);
 const char* connect_get_mac_addr();
 EventBits_t wifi_wait_connected_ms(TickType_t ticks);
+
+// Ethernet W5500 functions
+#ifdef CONFIG_ENABLE_ETHERNET
+void ethernet_init_for_nerdaxe(void);
+bool ethernet_is_connected(void);
+bool ethernet_is_available(void);
+bool ethernet_get_ip(char* buf, size_t len);
+bool ethernet_get_mac(char* buf, size_t len);
+#endif
 
 #ifdef __cplusplus
 }

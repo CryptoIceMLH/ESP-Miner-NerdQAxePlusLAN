@@ -26,10 +26,19 @@
 #include "history.h"
 #include "boards/board.h"
 
+#ifdef CONFIG_ENABLE_ETHERNET
+extern "C" {
+    #include "ethernet_w5500.h"
+}
+#endif
+
 static const char* TAG = "SystemModule";
 
-System::System() {
-    // NOP
+System::System() : m_networkMode(NETWORK_MODE_WIFI), m_ethAvailable(false),
+                   m_ethLinkUp(false), m_ethConnected(false) {
+    // Initialize network state to safe defaults
+    // setup_network() in main.cpp will override these if Ethernet hardware is detected
+    strcpy(m_ethMacAddress, "00:00:00:00:00:00");  // Default, will be set by setup_network()
 }
 
 void System::initSystem() {
@@ -90,6 +99,12 @@ void System::initSystem() {
     // initialize AP state
     m_apState = false;
 
+    // Initialize Ethernet state
+    // NOTE: Do NOT reset m_networkMode, m_ethAvailable, or m_ethMacAddress here - they're set by
+    // setup_network() in main.cpp before this task starts. Resetting them would overwrite values.
+    // Only reset IP to default (will be updated by updateEthernetStatus()):
+    strcpy(m_ethIpAddress, "0.0.0.0");
+
     // Initialize the display
     m_display = new DisplayDriver();
     m_display->loadSettings();
@@ -120,7 +135,22 @@ void System::updateEsp32Info() {}
 void System::initConnection() {}
 
 void System::updateConnection() {
-    m_display->updateWifiStatus(m_wifiStatus);
+    // Update status text based on network mode
+    if (m_networkMode == NETWORK_MODE_ETHERNET) {
+        // Show "LAN" or Ethernet connection status instead of WiFi
+#ifdef CONFIG_ENABLE_ETHERNET
+        if (m_ethConnected) {
+            m_display->updateWifiStatus("LAN");
+        } else {
+            m_display->updateWifiStatus("LAN OFF");
+        }
+#else
+        m_display->updateWifiStatus("LAN");
+#endif
+    } else {
+        // Show WiFi status
+        m_display->updateWifiStatus(m_wifiStatus);
+    }
 }
 
 void System::updateSystemPerformance() {}
@@ -138,6 +168,12 @@ const char* System::getMacAddress() {
 // Function to fetch and return the RSSI (dBm) value
 int System::get_wifi_rssi()
 {
+    // Skip RSSI check if using Ethernet mode
+    if (m_networkMode == NETWORK_MODE_ETHERNET) {
+        ESP_LOGD("WIFI_RSSI", "Using Ethernet mode, RSSI not applicable");
+        return 0;  // Return 0 to indicate Ethernet mode (no WiFi signal)
+    }
+
     wifi_ap_record_t ap_info;
 
     // Query the connected Access Point's information
@@ -148,6 +184,72 @@ int System::get_wifi_rssi()
         ESP_LOGE("WIFI_RSSI", "Failed to fetch RSSI");
         return -90;  // Return -90 to indicate an error
     }
+}
+
+// Update Ethernet status from W5500 driver
+void System::updateEthernetStatus() {
+#ifdef CONFIG_ENABLE_ETHERNET
+    ESP_LOGI(TAG, "updateEthernetStatus() called - m_ethAvailable=%d, m_networkMode=%d",
+             m_ethAvailable, m_networkMode);
+
+    // Only update Ethernet status if:
+    // 1. Hardware is available (W5500 detected)
+    // 2. We're actually in Ethernet mode (not WiFi/AP mode)
+    // This prevents crashes during first boot or when in WiFi mode
+    if (!m_ethAvailable || m_networkMode != NETWORK_MODE_ETHERNET) {
+        ESP_LOGI(TAG, "Ethernet not active (available=%d, mode=%d), returning early",
+                 m_ethAvailable, m_networkMode);
+        return;
+    }
+
+    // Get Ethernet netif handle
+    esp_netif_t* eth_netif = ethernet_w5500_get_netif();
+    if (!eth_netif) {
+        ESP_LOGW(TAG, "Ethernet netif is NULL");
+        return;
+    }
+
+    // Get IP info from ESP-IDF netif (same way WiFi does it)
+    esp_netif_ip_info_t ip_info;
+    esp_err_t ret = esp_netif_get_ip_info(eth_netif, &ip_info);
+
+    if (ret == ESP_OK && ip_info.ip.addr != 0) {
+        // We have a valid IP address
+        m_ethConnected = true;
+        m_ethLinkUp = true;
+
+        // Convert IP to string
+        snprintf(m_ethIpAddress, sizeof(m_ethIpAddress), IPSTR, IP2STR(&ip_info.ip));
+        ESP_LOGI(TAG, "Retrieved Ethernet IP: %s", m_ethIpAddress);
+
+        // Get MAC address
+        char mac_buf[18];
+        if (ethernet_w5500_get_mac(mac_buf, sizeof(mac_buf)) == ESP_OK) {
+            strncpy(m_ethMacAddress, mac_buf, sizeof(m_ethMacAddress) - 1);
+            m_ethMacAddress[sizeof(m_ethMacAddress) - 1] = '\0';
+            ESP_LOGI(TAG, "Retrieved Ethernet MAC: %s", m_ethMacAddress);
+        }
+
+        // Update system IP if using Ethernet
+        if (m_networkMode == NETWORK_MODE_ETHERNET) {
+            strncpy(m_ipAddress, m_ethIpAddress, sizeof(m_ipAddress));
+            m_ipAddress[sizeof(m_ipAddress) - 1] = '\0';
+            ESP_LOGI(TAG, "Updated m_ipAddress to: %s", m_ipAddress);
+        }
+    } else {
+        // No IP assigned yet
+        m_ethConnected = false;
+        m_ethLinkUp = ethernet_w5500_get_link_status();  // Still check physical link
+
+        ESP_LOGI(TAG, "Ethernet no IP (link_up=%d, ret=%d)", m_ethLinkUp, ret);
+        strcpy(m_ethIpAddress, "0.0.0.0");
+
+        // Also update system IP if in Ethernet mode
+        if (m_networkMode == NETWORK_MODE_ETHERNET) {
+            strcpy(m_ipAddress, "0.0.0.0");
+        }
+    }
+#endif
 }
 
 double System::calculateNetworkDifficulty(uint32_t nBits) {
@@ -339,13 +441,30 @@ void System::task() {
     int lastFoundBlocks = 0;
 
     while (1) {
+        // update Ethernet status if available
+#ifdef CONFIG_ENABLE_ETHERNET
+        updateEthernetStatus();  // This updates m_ipAddress for Ethernet mode
+#endif
+
         // update IP on the screen if it is available
-        if (connect_get_ip_addr(m_ipAddress, sizeof(m_ipAddress))) {
-            if (strcmp(m_ipAddress, lastIpAddress) != 0) {
-                ESP_LOGI(TAG, "ip address: %s", m_ipAddress);
-                m_display->updateIpAddress(m_ipAddress);
+        // WiFi mode: get IP from WiFi
+        // Ethernet mode: already updated by updateEthernetStatus() above
+        if (m_networkMode == NETWORK_MODE_WIFI) {
+            if (connect_get_ip_addr(m_ipAddress, sizeof(m_ipAddress))) {
+                if (strcmp(m_ipAddress, lastIpAddress) != 0) {
+                    ESP_LOGI(TAG, "WiFi IP address: %s", m_ipAddress);
+                    m_display->updateIpAddress(m_ipAddress);
+                    strncpy(lastIpAddress, m_ipAddress, sizeof(lastIpAddress));
+                }
             }
-            strncpy(lastIpAddress, m_ipAddress, sizeof(lastIpAddress));
+        } else if (m_networkMode == NETWORK_MODE_ETHERNET) {
+            // For Ethernet, m_ipAddress was already updated by updateEthernetStatus()
+            if (strcmp(m_ipAddress, lastIpAddress) != 0) {
+                ESP_LOGI(TAG, "Ethernet IP address changed: '%s' -> '%s'", lastIpAddress, m_ipAddress);
+                m_display->updateIpAddress(m_ipAddress);
+                strncpy(lastIpAddress, m_ipAddress, sizeof(lastIpAddress));
+                lastIpAddress[sizeof(lastIpAddress) - 1] = '\0';
+            }
         }
 
         if (m_overheated) {

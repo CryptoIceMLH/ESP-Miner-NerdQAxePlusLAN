@@ -33,6 +33,15 @@ export interface ISystemInfo {
     ssid: string,
     wifiPass: string,
     wifiStatus: string,
+
+    // Ethernet interface fields
+    networkMode: string,      // 'wifi' | 'ethernet'
+    ethAvailable: number,     // 1 if W5500 detected, 0 otherwise
+    ethLinkUp: number,        // 1 if PHY link up, 0 if cable disconnected
+    ethConnected: number,     // 1 if has IP address, 0 otherwise
+    ethIPv4: string,          // Ethernet IP address (e.g., "192.168.1.121")
+    ethMac: string,           // Ethernet MAC address (e.g., "02:00:00:00:00:01")
+
     sharesAccepted: number,
     sharesRejected: number,
     uptimeSeconds: number,

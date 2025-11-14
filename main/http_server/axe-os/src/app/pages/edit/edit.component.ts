@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Input, OnInit, TemplateRef } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { switchMap, forkJoin, startWith, tap, catchError, of } from 'rxjs';
+import { switchMap, forkJoin, startWith, tap, catchError, of, Subject, takeUntil, interval } from 'rxjs';
 import { LoadingService } from '../../services/loading.service';
 import { SystemService } from '../../services/system.service';
 import { eASICModel } from '../../models/enum/eASICModel';
@@ -17,7 +17,7 @@ enum SupportLevel { Safe = 0, Advanced = 1, Pro = 2 }
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss']
 })
-export class EditComponent implements OnInit {
+export class EditComponent implements OnInit, OnDestroy {
   public supportLevel: SupportLevel = SupportLevel.Safe;
 
   public form!: FormGroup;
@@ -47,9 +47,23 @@ export class EditComponent implements OnInit {
   public otpEnabled = false;
   private pendingTotp: string | undefined;
 
-  // NEW: the “raw” options from the /asic endpoint
+  // NEW: the "raw" options from the /asic endpoint
   private asicFrequencyValues: number[] = [];
   private asicVoltageValues: number[] = [];
+
+  // Ethernet state variables
+  public wifiIpv4: string = '';
+  public wifiStatus: string = '';
+  public wifiRSSI: number = -128;
+  public networkMode: string = 'wifi';
+  public ethAvailable: boolean = false;
+  public ethLinkUp: boolean = false;
+  public ethConnected: boolean = false;
+  public ethIPv4: string = '0.0.0.0';
+  public ethMac: string = '00:00:00:00:00:00';
+  public ethernetForm!: FormGroup;
+  public isScanning: boolean = false;
+  private destroy$ = new Subject<void>();
 
   private rebootRequiredFields = new Set<string>([
     'flipscreen',
@@ -86,13 +100,50 @@ export class EditComponent implements OnInit {
   ngOnInit(): void {
     forkJoin({
       info: this.systemService.getInfo(0, this.uri),
-      asic: this.systemService.getAsicInfo(this.uri)
+      asic: this.systemService.getAsicInfo(this.uri),
+      ethernet: this.systemService.getEthernetStatus(this.uri).pipe(
+        catchError(err => of(null))
+      )
     })
       .pipe(this.loadingService.lockUIUntilComplete())
-      .subscribe(({ info, asic }) => {
+      .subscribe(({ info, asic, ethernet }) => {
         this.originalSettings = structuredClone(info);
 
         this.otpEnabled = !!info.otp;
+
+        // Load Ethernet status
+        this.wifiIpv4 = info.hostip || '';
+        this.wifiStatus = info.wifiStatus || '';
+        this.wifiRSSI = info.wifiRSSI || -128;
+        this.networkMode = info.networkMode || 'wifi';
+        this.ethAvailable = !!info.ethAvailable;
+        this.ethLinkUp = !!info.ethLinkUp;
+        this.ethConnected = !!info.ethConnected;
+        this.ethIPv4 = info.ethIPv4 || '0.0.0.0';
+        this.ethMac = info.ethMac || '00:00:00:00:00:00';
+
+        // Build Ethernet form
+        if (ethernet) {
+          this.ethernetForm = this.fb.group({
+            ethUseDHCP: [ethernet.ethUseDHCP === 1],
+            ethStaticIP: [ethernet.ethStaticIP || '', [Validators.pattern(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)]],
+            ethGateway: [ethernet.ethGateway || '', [Validators.pattern(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)]],
+            ethSubnet: [ethernet.ethSubnet || '', [Validators.pattern(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)]],
+            ethDNS: [ethernet.ethDNS || '', [Validators.pattern(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)]],
+          });
+        } else {
+          // Fallback if Ethernet endpoint not available
+          this.ethernetForm = this.fb.group({
+            ethUseDHCP: [true],
+            ethStaticIP: ['', [Validators.pattern(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)]],
+            ethGateway: ['', [Validators.pattern(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)]],
+            ethSubnet: ['', [Validators.pattern(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)]],
+            ethDNS: ['', [Validators.pattern(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)]],
+          });
+        }
+
+        // Start periodic network status refresh
+        this.startNetworkStatusRefresh();
 
         // Model still from /info (enum-typed)
         this.ASICModel = info.ASICModel;
@@ -174,6 +225,13 @@ export class EditComponent implements OnInit {
           hostname: [info.hostname, [Validators.required]],
           ssid: [info.ssid, [Validators.required]],
           wifiPass: ['*****'],
+
+          // Ethernet fields (will be populated from ethernetForm if available)
+          ethUseDHCP: [ethernet?.ethUseDHCP === 1],
+          ethStaticIP: [ethernet?.ethStaticIP || '', [Validators.pattern(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)]],
+          ethGateway: [ethernet?.ethGateway || '', [Validators.pattern(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)]],
+          ethSubnet: [ethernet?.ethSubnet || '', [Validators.pattern(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)]],
+          ethDNS: [ethernet?.ethDNS || '', [Validators.pattern(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)]],
 
           coreVoltage: [info.coreVoltage, [Validators.min(1005), Validators.max(1400), Validators.required]],
           frequency: [info.frequency, [Validators.required]],
@@ -278,7 +336,32 @@ export class EditComponent implements OnInit {
       form.totp = this.pendingTotp;
     }
 
-    return this.systemService.updateSystem(this.uri, form, totp)
+    // Extract Ethernet config if present, send separately
+    const ethConfig = {
+      ethUseDHCP: form.ethUseDHCP,
+      ethStaticIP: form.ethStaticIP,
+      ethGateway: form.ethGateway,
+      ethSubnet: form.ethSubnet,
+      ethDNS: form.ethDNS
+    };
+
+    // Remove Ethernet fields from main form (they have separate endpoint)
+    delete form.ethUseDHCP;
+    delete form.ethStaticIP;
+    delete form.ethGateway;
+    delete form.ethSubnet;
+    delete form.ethDNS;
+
+    // Update main system settings, then Ethernet config
+    return this.systemService.updateSystem(this.uri, form, totp).pipe(
+      switchMap(() => {
+        // Also update Ethernet config if available
+        if (this.ethAvailable) {
+          return this.systemService.updateEthernetConfig(this.uri, ethConfig, totp);
+        }
+        return of(null);
+      })
+    );
   }
 
   get requiresReboot(): boolean {
@@ -468,6 +551,144 @@ export class EditComponent implements OnInit {
           this.toastrService.danger('Error.', `Could not save. ${err.message}`);
         }
       });
+  }
+
+  // Ethernet and Network Mode methods
+
+  private startNetworkStatusRefresh(): void {
+    // Poll network status every 5 seconds
+    interval(5000)
+      .pipe(
+        startWith(0),
+        switchMap(() => this.systemService.getInfo(0, this.uri)),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (info) => {
+          this.wifiIpv4 = info.hostip || '';
+          this.wifiStatus = info.wifiStatus || '';
+          this.wifiRSSI = info.wifiRSSI || -128;
+          this.networkMode = info.networkMode || 'wifi';
+          this.ethAvailable = !!info.ethAvailable;
+          this.ethLinkUp = !!info.ethLinkUp;
+          this.ethConnected = !!info.ethConnected;
+          this.ethIPv4 = info.ethIPv4 || '0.0.0.0';
+          this.ethMac = info.ethMac || '00:00:00:00:00:00';
+        },
+        error: (err) => {
+          console.error('Network status refresh error:', err);
+        }
+      });
+  }
+
+  public switchNetworkMode(mode: string): void {
+    this.otpAuth.ensureOtp$(
+      this.uri,
+      this.translate.instant('SECURITY.OTP_TITLE'),
+      this.translate.instant('NETWORK.SWITCH_MODE_HINT')
+    )
+      .pipe(
+        switchMap(({ totp }: EnsureOtpResult) =>
+          this.systemService.switchNetworkMode(this.uri, mode, totp).pipe(
+            this.loadingService.lockUIUntilComplete()
+          )
+        ),
+      )
+      .subscribe({
+        next: () => {
+          this.toastrService.success(
+            this.translate.instant('NETWORK.MODE_SWITCHED'),
+            this.translate.instant('NETWORK.RESTART_REQUIRED')
+          );
+          // Don't set networkMode here - it will be updated from backend after restart
+          // The polling function (startNetworkStatusRefresh) will update it
+        },
+        error: (err: HttpErrorResponse) => {
+          this.toastrService.danger(
+            this.translate.instant('COMMON.ERROR'),
+            this.translate.instant('NETWORK.MODE_SWITCH_FAILED') + ` ${err.message}`
+          );
+        }
+      });
+  }
+
+  public updateEthernetConfig(): void {
+    if (!this.ethernetForm.valid) {
+      this.toastrService.warning(
+        this.translate.instant('COMMON.VALIDATION_ERROR'),
+        this.translate.instant('NETWORK.INVALID_IP_CONFIG')
+      );
+      return;
+    }
+
+    const ethConfig = this.ethernetForm.getRawValue();
+
+    this.otpAuth.ensureOtp$(
+      this.uri,
+      this.translate.instant('SECURITY.OTP_TITLE'),
+      this.translate.instant('NETWORK.UPDATE_ETH_HINT')
+    )
+      .pipe(
+        switchMap(({ totp }: EnsureOtpResult) =>
+          this.systemService.updateEthernetConfig(this.uri, ethConfig, totp).pipe(
+            this.loadingService.lockUIUntilComplete()
+          )
+        ),
+      )
+      .subscribe({
+        next: () => {
+          this.toastrService.success(
+            this.translate.instant('COMMON.SUCCESS'),
+            this.translate.instant('NETWORK.ETH_CONFIG_SAVED')
+          );
+        },
+        error: (err: HttpErrorResponse) => {
+          this.toastrService.danger(
+            this.translate.instant('COMMON.ERROR'),
+            this.translate.instant('NETWORK.ETH_CONFIG_FAILED') + ` ${err.message}`
+          );
+        }
+      });
+  }
+
+  public scanWifi(): void {
+    // WiFi scan functionality - not implemented yet
+    // TODO: Add scanWifi() method to SystemService if WiFi scanning is needed
+    this.isScanning = false;
+    console.log('WiFi scan not implemented');
+  }
+
+  public isConnectedToWifi(): boolean {
+    return this.networkMode === 'wifi' && this.wifiIpv4 && this.wifiIpv4 !== '0.0.0.0';
+  }
+
+  public isConnectedToEthernet(): boolean {
+    return this.networkMode === 'ethernet' && this.ethIPv4 && this.ethIPv4 !== '0.0.0.0';
+  }
+
+  public isConnectedToNetwork(): boolean {
+    return this.isConnectedToWifi() || this.isConnectedToEthernet();
+  }
+
+  public getNetworkStatusColor(): string {
+    if (this.isConnectedToEthernet()) return 'success';  // Green for Ethernet
+    if (this.isConnectedToWifi()) return 'info';         // Blue for WiFi
+    return 'warning';                                     // Yellow for connecting/disconnected
+  }
+
+  public getNetworkStatusText(): string {
+    if (this.isConnectedToEthernet()) {
+      return this.translate.instant('NETWORK.CONNECTED_ETHERNET') + ` (${this.ethIPv4})`;
+    }
+    if (this.isConnectedToWifi()) {
+      return this.translate.instant('NETWORK.CONNECTED_WIFI') + ` (${this.wifiIpv4})`;
+    }
+    return this.translate.instant('NETWORK.CONNECTING');
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
 

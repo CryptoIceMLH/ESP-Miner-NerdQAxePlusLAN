@@ -158,12 +158,18 @@ esp_err_t rest_common_get_handler(httpd_req_t *req)
     // This helps avoid piling up sockets on the ESP32.
     httpd_resp_set_hdr(req, "Connection", "close");
 
-    // Now we append ".gz" because we serve precompressed assets.
-    // Check buffer bounds first.
-    if (strlen(filepath) + strlen(".gz") + 1 > filePathLength) {
-        return return_500(req, "File path too long");
+    // Check if this is a .json file - serve those uncompressed for translation compatibility
+    const char *ext = strrchr(filepath, '.');
+    bool isJsonFile = (ext != NULL && strcmp(ext, ".json") == 0);
+
+    // Now we append ".gz" for non-json files because we serve precompressed assets.
+    if (!isJsonFile) {
+        // Check buffer bounds first.
+        if (strlen(filepath) + strlen(".gz") + 1 > filePathLength) {
+            return return_500(req, "File path too long");
+        }
+        strlcat(filepath, ".gz", filePathLength);
     }
-    strlcat(filepath, ".gz", filePathLength);
 
     int fd = open(filepath, O_RDONLY, 0);
     if (fd < 0) {
@@ -176,8 +182,10 @@ esp_err_t rest_common_get_handler(httpd_req_t *req)
         }
     }
 
-    // At this point we KNOW we're actually serving a gzip file, so announce it.
-    httpd_resp_set_hdr(req, "Content-Encoding", "gzip");
+    // Set gzip encoding header only for compressed files (not .json)
+    if (!isJsonFile) {
+        httpd_resp_set_hdr(req, "Content-Encoding", "gzip");
+    }
 
     ESP_LOGI(TAG, "Sending %s", filepath);
 

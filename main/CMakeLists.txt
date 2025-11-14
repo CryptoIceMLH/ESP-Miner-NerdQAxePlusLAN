@@ -100,6 +100,7 @@ INCLUDE_DIRS
     "esp_timer"
     "esp-tls"
     "esp_wifi"
+    "ethernet_w5500"
     "esp_lcd"
     "esp_psram"
     "json"

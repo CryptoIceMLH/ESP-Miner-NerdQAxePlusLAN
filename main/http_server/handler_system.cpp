@@ -165,6 +165,26 @@ esp_err_t GET_system_info(httpd_req_t *req)
     doc["uptimeSeconds"]      = (esp_timer_get_time() - SYSTEM_MODULE.getStartTime()) / 1000000;
     doc["lastResetReason"]    = SYSTEM_MODULE.getLastResetReason();
     doc["wifiStatus"]         = SYSTEM_MODULE.getWifiStatus();
+
+    // Ethernet status fields
+#ifdef CONFIG_ENABLE_ETHERNET
+    const char* network_mode_str = (SYSTEM_MODULE.getNetworkMode() == System::NETWORK_MODE_ETHERNET) ? "ethernet" : "wifi";
+    ESP_LOGI(TAG, "Sending networkMode to UI: %s (raw value: %d)", network_mode_str, SYSTEM_MODULE.getNetworkMode());
+    doc["networkMode"]        = network_mode_str;
+    doc["ethAvailable"]       = SYSTEM_MODULE.isEthernetAvailable() ? 1 : 0;
+    doc["ethLinkUp"]          = SYSTEM_MODULE.isEthernetLinkUp() ? 1 : 0;
+    doc["ethConnected"]       = SYSTEM_MODULE.isEthernetConnected() ? 1 : 0;
+    doc["ethIPv4"]            = SYSTEM_MODULE.getEthernetIP();
+    doc["ethMac"]             = SYSTEM_MODULE.getEthernetMAC();
+#else
+    doc["networkMode"]        = "wifi";
+    doc["ethAvailable"]       = 0;
+    doc["ethLinkUp"]          = 0;
+    doc["ethConnected"]       = 0;
+    doc["ethIPv4"]            = "0.0.0.0";
+    doc["ethMac"]             = "00:00:00:00:00:00";
+#endif
+
     doc["freeHeap"]           = heap_caps_get_free_size(MALLOC_CAP_SPIRAM);
     doc["freeHeapInt"]        = heap_caps_get_free_size(MALLOC_CAP_INTERNAL);
     doc["version"]            = esp_app_get_description()->version;
@@ -389,10 +409,181 @@ esp_err_t GET_system_asic(httpd_req_t *req)
         for (uint32_t v : volts) { arr.add(v); }
     }
 
-    // Verbindung schließen, damit nichts „hängt“
+    // Verbindung schließen, damit nichts „hängt"
     httpd_resp_set_hdr(req, "Connection", "close");
 
     esp_err_t ret = sendJsonResponse(req, doc);
     doc.clear();
     return ret;
 }
+
+// ============================================================================
+// Ethernet Configuration API Endpoints
+// ============================================================================
+
+#ifdef CONFIG_ENABLE_ETHERNET
+
+/**
+ * GET /api/system/ethernet/status
+ * Get Ethernet configuration and status
+ */
+esp_err_t GET_ethernet_status(httpd_req_t *req)
+{
+    if (is_network_allowed(req) != ESP_OK) {
+        return httpd_resp_send_err(req, HTTPD_401_UNAUTHORIZED, "Unauthorized");
+    }
+
+    httpd_resp_set_type(req, "application/json");
+
+    if (set_cors_headers(req) != ESP_OK) {
+        httpd_resp_send_500(req);
+        return ESP_FAIL;
+    }
+
+    PSRAMAllocator allocator;
+    JsonDocument doc(&allocator);
+
+    // Network mode
+    doc["networkMode"] = (SYSTEM_MODULE.getNetworkMode() == System::NETWORK_MODE_ETHERNET) ? "ethernet" : "wifi";
+
+    // Hardware status
+    doc["ethAvailable"] = SYSTEM_MODULE.isEthernetAvailable() ? 1 : 0;
+    doc["ethLinkUp"] = SYSTEM_MODULE.isEthernetLinkUp() ? 1 : 0;
+    doc["ethConnected"] = SYSTEM_MODULE.isEthernetConnected() ? 1 : 0;
+    doc["ethIPv4"] = SYSTEM_MODULE.getEthernetIP();
+    doc["ethMac"] = SYSTEM_MODULE.getEthernetMAC();
+
+    // Configuration
+    doc["ethUseDHCP"] = Config::isEthUseDHCP() ? 1 : 0;
+
+    char *ethStaticIP = Config::getEthStaticIP();
+    char *ethGateway = Config::getEthGateway();
+    char *ethSubnet = Config::getEthSubnet();
+    char *ethDNS = Config::getEthDNS();
+
+    doc["ethStaticIP"] = ethStaticIP;
+    doc["ethGateway"] = ethGateway;
+    doc["ethSubnet"] = ethSubnet;
+    doc["ethDNS"] = ethDNS;
+
+    free(ethStaticIP);
+    free(ethGateway);
+    free(ethSubnet);
+    free(ethDNS);
+
+    httpd_resp_set_hdr(req, "Connection", "close");
+
+    esp_err_t ret = sendJsonResponse(req, doc);
+    doc.clear();
+    return ret;
+}
+
+/**
+ * POST /api/system/ethernet/config
+ * Update Ethernet configuration (DHCP/static IP settings)
+ */
+esp_err_t POST_ethernet_config(httpd_req_t *req)
+{
+    if (is_network_allowed(req) != ESP_OK) {
+        return httpd_resp_send_err(req, HTTPD_401_UNAUTHORIZED, "Unauthorized");
+    }
+
+    if (set_cors_headers(req) != ESP_OK) {
+        httpd_resp_send_500(req);
+        return ESP_FAIL;
+    }
+
+    if (validateOTP(req) != ESP_OK) {
+        return ESP_FAIL;
+    }
+
+    PSRAMAllocator allocator;
+    JsonDocument doc(&allocator);
+
+    esp_err_t err = getJsonData(req, doc);
+    if (err != ESP_OK) {
+        return err;
+    }
+
+    // Update Ethernet configuration
+    if (doc.containsKey("ethUseDHCP")) {
+        Config::setEthUseDHCP(doc["ethUseDHCP"].as<int>() != 0);
+    }
+
+    if (doc.containsKey("ethStaticIP")) {
+        Config::setEthStaticIP(doc["ethStaticIP"].as<const char*>());
+    }
+
+    if (doc.containsKey("ethGateway")) {
+        Config::setEthGateway(doc["ethGateway"].as<const char*>());
+    }
+
+    if (doc.containsKey("ethSubnet")) {
+        Config::setEthSubnet(doc["ethSubnet"].as<const char*>());
+    }
+
+    if (doc.containsKey("ethDNS")) {
+        Config::setEthDNS(doc["ethDNS"].as<const char*>());
+    }
+
+    httpd_resp_set_type(req, "application/json");
+    httpd_resp_set_hdr(req, "Connection", "close");
+
+    const char* success_response = "{\"success\":true,\"message\":\"Ethernet config saved. Restart required.\"}";
+    httpd_resp_sendstr(req, success_response);
+
+    doc.clear();
+    return ESP_OK;
+}
+
+/**
+ * POST /api/system/network/mode
+ * Switch between WiFi and Ethernet network modes
+ */
+esp_err_t POST_network_mode(httpd_req_t *req)
+{
+    if (is_network_allowed(req) != ESP_OK) {
+        return httpd_resp_send_err(req, HTTPD_401_UNAUTHORIZED, "Unauthorized");
+    }
+
+    if (set_cors_headers(req) != ESP_OK) {
+        httpd_resp_send_500(req);
+        return ESP_FAIL;
+    }
+
+    if (validateOTP(req) != ESP_OK) {
+        return ESP_FAIL;
+    }
+
+    PSRAMAllocator allocator;
+    JsonDocument doc(&allocator);
+
+    esp_err_t err = getJsonData(req, doc);
+    if (err != ESP_OK) {
+        return err;
+    }
+
+    if (!doc.containsKey("networkMode")) {
+        return httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Missing networkMode field");
+    }
+
+    const char* mode = doc["networkMode"].as<const char*>();
+
+    if (strcmp(mode, "ethernet") == 0 || strcmp(mode, "wifi") == 0) {
+        Config::setNetworkMode(mode);
+
+        httpd_resp_set_type(req, "application/json");
+        httpd_resp_set_hdr(req, "Connection", "close");
+
+        const char* success_response = "{\"success\":true,\"message\":\"Network mode changed. Restart required.\"}";
+        httpd_resp_sendstr(req, success_response);
+
+        doc.clear();
+        return ESP_OK;
+    } else {
+        doc.clear();
+        return httpd_resp_send_err(req, HTTPD_400_BAD_REQUEST, "Invalid network mode. Use 'wifi' or 'ethernet'");
+    }
+}
+
+#endif // CONFIG_ENABLE_ETHERNET

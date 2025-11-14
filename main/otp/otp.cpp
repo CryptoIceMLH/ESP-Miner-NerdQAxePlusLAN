@@ -272,8 +272,11 @@ bool OTP::init()
         return false;
     }
 
-    m_hostname = SYSTEM_MODULE.getHostname();
-    m_mac = SYSTEM_MODULE.getMacAddress();
+    const char* hostname = SYSTEM_MODULE.getHostname();
+    const char* mac = SYSTEM_MODULE.getMacAddress();
+
+    m_hostname = hostname ? hostname : "";
+    m_mac = mac ? mac : "";
     m_deviceModel = board->getDeviceModel();
 
     // load saved values

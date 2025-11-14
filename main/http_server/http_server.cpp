@@ -204,6 +204,23 @@ esp_err_t start_rest_server(void * pvParameters)
         .uri = "/api/otp/status", .method = HTTP_GET, .handler = GET_otp_status, .user_ctx = rest_context};
     httpd_register_uri_handler(http_server, &get_otp_status);
 
+#ifdef CONFIG_ENABLE_ETHERNET
+    /* URI handler for Ethernet status */
+    httpd_uri_t ethernet_status_get_uri = {
+        .uri = "/api/system/ethernet/status", .method = HTTP_GET, .handler = GET_ethernet_status, .user_ctx = rest_context};
+    httpd_register_uri_handler(http_server, &ethernet_status_get_uri);
+
+    /* URI handler for updating Ethernet configuration */
+    httpd_uri_t ethernet_config_post_uri = {
+        .uri = "/api/system/ethernet/config", .method = HTTP_POST, .handler = POST_ethernet_config, .user_ctx = rest_context};
+    httpd_register_uri_handler(http_server, &ethernet_config_post_uri);
+
+    /* URI handler for switching network mode */
+    httpd_uri_t network_mode_post_uri = {
+        .uri = "/api/system/network/mode", .method = HTTP_POST, .handler = POST_network_mode, .user_ctx = rest_context};
+    httpd_register_uri_handler(http_server, &network_mode_post_uri);
+#endif
+
     /* URI handler for fetching Discord alert settings */
     httpd_uri_t alert_info_get_uri = {
         .uri = "/api/alert/info", .method = HTTP_GET, .handler = GET_alert_info, .user_ctx = rest_context};
