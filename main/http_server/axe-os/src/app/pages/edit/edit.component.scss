@@ -1,0 +1,302 @@
+@import '../../@theme/styles/themes';
+@import 'bootstrap/scss/mixins/breakpoints';
+//@import '~@nebular/theme/styles/global/_breakpoints';
+
+@include nb-install-component() {
+    .pi {
+        right: 1rem;
+        font-size: 1.5rem;
+        top: 1rem;
+    }
+
+    .custom-section-title {
+        font-family: var(--font-family);
+        font-feature-settings: var(--font-feature-settings, normal);
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--primary-color);
+        padding: 10px 0;
+        margin-bottom: 10px;
+        padding-left: 15px;
+        border-bottom: 2px solid #304562;
+    }
+
+    .form-row-separator {
+        @extend .form-row;
+
+        border-top: 1px solid;
+        border-color:var(--card-border-color);
+        padding-top:5px;
+    }
+
+    .form-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+        width: 100%;
+    }
+
+    .form-label {
+        flex: 0 0 120px;
+        text-align: right;
+        margin-right: 16px;
+    }
+
+    .form-control-wrapper {
+        flex: 1;
+    }
+
+    .form-control-wrapper-no-label {
+        flex: 1;
+        margin-left: 115px;
+        margin-top: -10px;
+    }
+
+    .password-container {
+        display: flex;
+        align-items: center;
+    }
+
+    .password-container button {
+        margin-left: 8px;
+    }
+
+    .checkbox-container {
+        display: flex;
+        gap: 16px;
+        margin-top: 16px;
+    }
+
+    small {
+        padding-left: 5px;
+    }
+
+    input {
+        min-width: 100%;
+        width: 100%;
+    }
+
+    nb-card-body {
+        overflow: hidden;
+    }
+
+    nb-select {
+        min-width: 100%;
+    }
+
+    .input-with-icon {
+        width: 100%;
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .input-with-icon input {
+        width: 100%;
+        padding-right: 40px;
+        /* Ensure space for the icon button */
+    }
+
+    .icon-button {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        border: none;
+        background: none;
+        cursor: pointer;
+        padding: 0;
+        width: fit-content;
+    }
+
+    nb-slider {
+        width: 100%;
+    }
+
+    .progress-wrap {
+        position: relative;
+        height: 1rem;
+        margin-left: 10px;
+    }
+
+    .progress-foreground {
+        background-color: nb-theme(color-primary-default);
+        height: 5px;
+        position: absolute;
+        left: 0;
+        margin-top: calc(0.75rem - 1px);
+        width: 100px;
+    }
+
+    .progress {
+        appearance: none;
+        width: 100%;
+        background: transparent;
+        height: 1.5rem;
+        outline: none;
+        position: absolute;
+
+        @include install-thumb() {
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            background: nb-theme(color-primary-default);
+            cursor: pointer;
+            margin-top: calc(-0.5rem + 1px + 1.25px);
+            border: none;
+        }
+
+        @include install-track() {
+            width: 100%;
+            height: 2px;
+            cursor: pointer;
+            background: nb-theme(border-basic-color-3);
+        }
+    }
+
+    button {
+        width: 80px;
+    }
+
+    .unsafe-setting {
+        background-color: rgba(255, 0, 0, 0.2) !important; // Light red
+        border: 2px solid red !important;
+        transition: background-color 0.3s ease-in-out, border 0.3s ease-in-out !important; // Smooth transition
+    }
+
+    .unsafe-setting ::ng-deep button {
+        background-color: rgba(255, 0, 0, 0.2) !important; // Light red
+        transition: background-color 0.3s ease-in-out, border 0.3s ease-in-out !important; // Smooth transition
+    }
+
+    .btn-support { user-select: none; }
+
+    nb-tabset .form-label {
+        flex: 0 0 110px;
+        text-align: right;
+        margin-right: 16px;
+    }
+}
+
+// Network Mode Buttons
+.network-mode-buttons {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+
+  button {
+    width: auto;
+    min-width: 140px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
+
+    nb-icon {
+      font-size: 1.25rem;
+    }
+  }
+}
+
+// Section Divider
+.section-divider {
+  border: none;
+  border-top: 1px solid;
+  margin: 1.5rem 0;
+}
+
+// Network Section Styles
+.network-section {
+  margin-bottom: 1.5rem;
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid;
+
+    nb-icon {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+// WiFi/Ethernet Status Display
+.wifi-status {
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-top: 1rem;
+
+  .status-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .status-label {
+      font-weight: 500;
+    }
+
+    .status-value {
+      font-weight: 600;
+
+      &.connected {
+        color: #00d68f;
+      }
+    }
+  }
+}
+
+// Static IP Section
+.static-ip-section {
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid;
+}
+
+// Toggle Wrapper
+.toggle-wrapper {
+  display: flex;
+  align-items: center;
+
+  nb-toggle {
+    margin-right: 0.5rem;
+  }
+}
+
+// Password Wrapper
+.password-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  input {
+    flex: 1;
+  }
+
+  button {
+    flex-shrink: 0;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .network-mode-buttons {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+    }
+  }
+}
+
