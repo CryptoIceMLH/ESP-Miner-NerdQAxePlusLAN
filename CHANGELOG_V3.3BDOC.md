@@ -30,7 +30,7 @@ V3.3BDOC introduces advanced overclocking features for experienced users who wan
 
 **Persistence:**
 - Support level persists in browser localStorage
-- Auto-expires after 24 hours (resets to Level 0)
+- Remains set until manually changed by user
 - Single storage key: `support-level` (integer: 0, 1, or 2)
 
 ---
@@ -89,11 +89,11 @@ The following advanced settings remain visible at Level 2 (carried over from V3.
 
 ## 🔒 Safety Features
 
-1. **24-Hour Expiry:** Support level automatically resets to Safe (0) after 1 day
-2. **Double-Click Requirement:** BDOC mode requires deliberate user action (not accidental)
-3. **Visual Warnings:** Orange pulsing banner clearly indicates dangerous mode
-4. **No Auto-Enable:** BDOC features NEVER activate automatically
-5. **Backward Compatible:** Users who never double-click never see BDOC features
+1. **Double-Click Requirement:** BDOC mode requires deliberate user action (not accidental)
+2. **Visual Warnings:** Orange pulsing banner clearly indicates dangerous mode
+3. **No Auto-Enable:** BDOC features NEVER activate automatically
+4. **Backward Compatible:** Users who never double-click never see BDOC features
+5. **Persistent State:** Support level persists in browser localStorage until manually changed
 
 ---
 

@@ -17,7 +17,6 @@ export class AdvancedToggleComponent implements OnInit {
 
   // New single-key storage (as requested)
   private storageKey = 'support-level';
-  private storageExpiryKey = 'support-level-expiry';
 
   // Debounce for distinguishing single vs double click
   private clickTimer: any = null;
@@ -58,7 +57,7 @@ export class AdvancedToggleComponent implements OnInit {
   private setSupportLevel(level: SupportLevel) {
     this.supportLevel = level;
 
-    // Persist as a single integer with expiry
+    // Persist as a single integer
     this.saveState();
 
     // Inform parent (unchanged contract)
@@ -66,24 +65,11 @@ export class AdvancedToggleComponent implements OnInit {
   }
 
   private saveState() {
-    // Expire after 1 day
-    const expiryTime = Date.now() + 24 * 60 * 60 * 1000;
     this.localStorageService.setNumber(this.storageKey, this.supportLevel);
-    this.localStorageService.setNumber(this.storageExpiryKey, expiryTime);
   }
 
   private loadState() {
-    const expiry = this.localStorageService.getNumber(this.storageExpiryKey);
-
-    // Expired -> reset to Safe
-    if (expiry && Date.now() > expiry) {
-      this.localStorageService.setNumber(this.storageKey, SupportLevel.Safe);
-      this.localStorageService.setNumber(this.storageExpiryKey, 0);
-      this.setSupportLevel(SupportLevel.Safe);
-      return;
-    }
-
-    // Prefer new single-key state
+    // Load stored support level
     const stored = this.localStorageService.getNumber(this.storageKey);
     if (stored === 0 || stored === 1 || stored === 2) {
       this.setSupportLevel(stored as SupportLevel);
