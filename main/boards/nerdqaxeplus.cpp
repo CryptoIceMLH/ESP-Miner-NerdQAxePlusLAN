@@ -221,10 +221,19 @@ bool NerdQaxePlus::setVoltage(float core_voltage)
 }
 
 void NerdQaxePlus::setFanSpeedCh(int channel, float perc) {
+    if (Config::isImmersionModeEnabled()) {
+        // Immersion mode - fans disabled, don't write to hardware
+        return;
+    }
     EMC2302_set_fan_speed(channel, perc);
 }
 
 void NerdQaxePlus::getFanSpeedCh(int channel, uint16_t* rpm) {
+    if (Config::isImmersionModeEnabled()) {
+        // Immersion mode - report 0 RPM
+        *rpm = 0;
+        return;
+    }
     EMC2302_get_fan_speed(channel, rpm);
 }
 

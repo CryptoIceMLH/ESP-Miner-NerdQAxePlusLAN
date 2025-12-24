@@ -40,15 +40,6 @@ const defaultInfo: ISystemInfo = {
   ssid: "default",
   wifiPass: "password",
   wifiStatus: "SYSTEM.WIFI_CONNECTED",
-
-  // Ethernet defaults
-  networkMode: "wifi",
-  ethAvailable: 0,
-  ethLinkUp: 0,
-  ethConnected: 0,
-  ethIPv4: "0.0.0.0",
-  ethMac: "00:00:00:00:00:00",
-
   sharesAccepted: 1,
   sharesRejected: 0,
   uptimeSeconds: 38,
@@ -311,35 +302,6 @@ export class SystemService {
   // only returns enabled flag
   public getOTPStatus(): Observable<{ enabled: boolean }> {
     return this.httpClient.get('/api/otp/status') as Observable<{ enabled: boolean }>;
-  }
-
-  /**
-   * Get Ethernet configuration and status
-   */
-  public getEthernetStatus(uri: string = ''): Observable<any> {
-    return this.httpClient.get(`${uri}/api/system/ethernet/status`);
-  }
-
-  /**
-   * Update Ethernet configuration (DHCP vs static IP settings)
-   */
-  public updateEthernetConfig(uri: string = '', config: any, totp?: string): Observable<any> {
-    let headers = new HttpHeaders();
-    if (totp) {
-      headers = headers.set('X-TOTP', totp);
-    }
-    return this.httpClient.post(`${uri}/api/system/ethernet/config`, config, { headers });
-  }
-
-  /**
-   * Switch between WiFi and Ethernet network modes
-   */
-  public switchNetworkMode(uri: string = '', mode: string, totp?: string): Observable<any> {
-    let headers = new HttpHeaders();
-    if (totp) {
-      headers = headers.set('X-TOTP', totp);
-    }
-    return this.httpClient.post(`${uri}/api/system/network/mode`, { networkMode: mode }, { headers });
   }
 }
 

@@ -8,157 +8,31 @@
     </app-alert-banner>
     <form [formGroup]="form">
         <nb-card>
-            <nb-card-header>{{ 'SETTINGS.NETWORK_SETTINGS' | translate }}</nb-card-header>
+            <nb-card-header>{{ 'SETTINGS.WIFI_SETTINGS' | translate }}</nb-card-header>
             <nb-card-body>
-                <!-- Hostname (common to both modes) -->
                 <div class="form-row">
                     <label for="hostname" class="form-label">{{ 'SETTINGS.HOSTNAME' | translate }}:</label>
                     <div class="form-control-wrapper">
-                        <input nbInput fullWidth id="hostname" type="text" formControlName="hostname" />
+                        <input nbInput id="hostname" type="text" formControlName="hostname" />
                     </div>
                 </div>
-
-                <!-- Network Mode Selector -->
                 <div class="form-row">
-                    <label class="form-label">{{ 'NETWORK.NETWORK_MODE' | translate }}:</label>
-                    <div class="network-mode-buttons">
-                        <button nbButton [status]="networkMode === 'wifi' ? 'primary' : 'basic'"
-                                [disabled]="networkMode === 'wifi'"
-                                (click)="switchNetworkMode('wifi')"
-                                type="button">
-                            <nb-icon icon="wifi-outline" pack="eva"></nb-icon>
-                            {{ 'NETWORK.MODE_WIFI' | translate }}
-                        </button>
-                        <button nbButton [status]="networkMode === 'ethernet' ? 'primary' : 'basic'"
-                                [disabled]="networkMode === 'ethernet' || !ethAvailable"
-                                (click)="switchNetworkMode('ethernet')"
-                                type="button">
-                            <nb-icon icon="flash-outline" pack="eva"></nb-icon>
-                            {{ 'NETWORK.MODE_ETHERNET' | translate }}
-                        </button>
-                    </div>
-                    <small class="form-hint">{{ 'NETWORK.MODE_SWITCH_REQUIRES_RESTART' | translate }}</small>
-                </div>
-
-                <hr class="section-divider" />
-
-                <!-- WiFi Section -->
-                <div class="network-section" *ngIf="networkMode === 'wifi'">
-                    <h6 class="section-title">
-                        <nb-icon icon="wifi-outline" pack="eva"></nb-icon>
-                        {{ 'NETWORK.WIFI_CONFIGURATION' | translate }}
-                    </h6>
-
-                    <!-- SSID -->
-                    <div class="form-row">
-                        <label for="ssid" class="form-label">{{ 'SETTINGS.WIFI_SSID' | translate }}:</label>
-                        <div class="form-control-wrapper">
-                            <input nbInput fullWidth id="ssid" type="text" formControlName="ssid" />
-                        </div>
-                    </div>
-
-                    <!-- WiFi Password -->
-                    <div class="form-row">
-                        <label for="wifiPass" class="form-label">{{ 'SETTINGS.WIFI_PASSWORD' | translate }}:</label>
-                        <div class="form-control-wrapper password-wrapper">
-                            <input nbInput fullWidth id="wifiPass" [type]="showWifiPassword ? 'text' : 'password'"
-                                   formControlName="wifiPass" />
-                            <button nbButton ghost (click)="toggleWifiPasswordVisibility()" type="button">
-                                <nb-icon [icon]="showWifiPassword ? 'eye-off-outline' : 'eye-outline'" pack="eva"></nb-icon>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- WiFi Status -->
-                    <div class="wifi-status">
-                        <div class="status-item">
-                            <span class="status-label">{{ 'NETWORK.STATUS' | translate }}:</span>
-                            <span class="status-value">{{ wifiStatus | translate }}</span>
-                        </div>
-                        <div class="status-item">
-                            <span class="status-label">{{ 'NETWORK.IP_ADDRESS' | translate }}:</span>
-                            <span class="status-value">{{ wifiIpv4 }}</span>
-                        </div>
-                        <div class="status-item">
-                            <span class="status-label">{{ 'NETWORK.SIGNAL_STRENGTH' | translate }}:</span>
-                            <span class="status-value">{{ wifiRSSI }} dBm</span>
-                        </div>
+                    <label for="ssid" class="form-label">{{ 'SETTINGS.WIFI_SSID' | translate }}:</label>
+                    <div class="form-control-wrapper">
+                        <input nbInput id="ssid" type="text" formControlName="ssid" />
                     </div>
                 </div>
-
-                <!-- Ethernet Section -->
-                <div class="network-section" *ngIf="networkMode === 'ethernet'">
-                    <h6 class="section-title">
-                        <nb-icon icon="flash-outline" pack="eva"></nb-icon>
-                        {{ 'NETWORK.ETHERNET_CONFIGURATION' | translate }}
-                    </h6>
-
-                    <div *ngIf="ethAvailable">
-                        <!-- DHCP Toggle -->
-                        <div class="form-row">
-                            <label class="form-label">{{ 'NETWORK.IP_ASSIGNMENT' | translate }}:</label>
-                            <div class="toggle-wrapper">
-                                <nb-toggle formControlName="ethUseDHCP">
-                                    {{ form.get('ethUseDHCP')?.value ? ('NETWORK.DHCP_AUTO' | translate) : ('NETWORK.STATIC_MANUAL' | translate) }}
-                                </nb-toggle>
-                            </div>
-                        </div>
-
-                        <!-- Static IP Fields -->
-                        <div *ngIf="!form.get('ethUseDHCP')?.value" class="static-ip-section">
-                            <div class="form-row">
-                                <label for="ethStaticIP" class="form-label">{{ 'NETWORK.STATIC_IP' | translate }}:</label>
-                                <div class="form-control-wrapper">
-                                    <input nbInput fullWidth id="ethStaticIP" type="text" formControlName="ethStaticIP"
-                                           placeholder="192.168.1.100" />
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <label for="ethGateway" class="form-label">{{ 'NETWORK.GATEWAY' | translate }}:</label>
-                                <div class="form-control-wrapper">
-                                    <input nbInput fullWidth id="ethGateway" type="text" formControlName="ethGateway"
-                                           placeholder="192.168.1.1" />
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <label for="ethSubnet" class="form-label">{{ 'NETWORK.SUBNET_MASK' | translate }}:</label>
-                                <div class="form-control-wrapper">
-                                    <input nbInput fullWidth id="ethSubnet" type="text" formControlName="ethSubnet"
-                                           placeholder="255.255.255.0" />
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <label for="ethDNS" class="form-label">{{ 'NETWORK.DNS_SERVER' | translate }}:</label>
-                                <div class="form-control-wrapper">
-                                    <input nbInput fullWidth id="ethDNS" type="text" formControlName="ethDNS"
-                                           placeholder="8.8.8.8" />
-                                </div>
-                            </div>
-                        </div>
+                <div class="form-row">
+                    <label for="wifiPass" class="form-label">{{ 'SETTINGS.WIFI_PASSWORD' | translate }}:</label>
+                    <div class="input-with-icon">
+                        <input nbInput id="wifiPass" formControlName="wifiPass"
+                            [type]="showWifiPassword ? 'text' : 'password'"
+                            [placeholder]="'SETTINGS.WIFI_PASSWORD_PLACEHOLDER' | translate" />
+                        <button nbButton ghost size="small" (click)="toggleWifiPasswordVisibility()" type="button"
+                            class="icon-button">
+                            <nb-icon [icon]="showWifiPassword ? 'eye-off-outline' : 'eye-outline'" pack="eva"></nb-icon>
+                        </button>
                     </div>
-
-                    <!-- Ethernet Status -->
-                    <div class="wifi-status" *ngIf="ethAvailable">
-                        <div class="status-item">
-                            <span class="status-label">{{ 'NETWORK.STATUS' | translate }}:</span>
-                            <span class="status-value" [class.connected]="ethConnected">
-                                {{ ethConnected ? ('NETWORK.CONNECTED' | translate) : ('NETWORK.CONNECTING' | translate) }}
-                            </span>
-                        </div>
-                        <div class="status-item">
-                            <span class="status-label">{{ 'NETWORK.IP_ADDRESS' | translate }}:</span>
-                            <span class="status-value">{{ ethIPv4 }}</span>
-                        </div>
-                        <div class="status-item">
-                            <span class="status-label">{{ 'NETWORK.MAC_ADDRESS' | translate }}:</span>
-                            <span class="status-value">{{ ethMac }}</span>
-                        </div>
-                    </div>
-
-                    <!-- Hardware Not Available -->
-                    <nb-alert status="warning" *ngIf="!ethAvailable">
-                        {{ 'NETWORK.ETH_NOT_AVAILABLE_MESSAGE' | translate }}
-                    </nb-alert>
                 </div>
             </nb-card-body>
         </nb-card>
@@ -343,6 +217,41 @@
                         <div class="form-control-wrapper">
                             <input (input)="checkVoltageLimit()" [ngClass]="{'unsafe-setting': isVoltageTooHigh()}"
                                 nbInput id="coreVoltage" formControlName="coreVoltage" type="number" />
+                        </div>
+                    </div>
+                </ng-container>
+
+                <!-- BDOC MODE (Level 2 only - Double Click) -->
+                <ng-container *ngIf="supportLevel === 2">
+                    <!-- BDOC Mode Active Banner -->
+                    <nb-alert status="warning" class="bdoc-banner">
+                        <div class="bdoc-banner-content">
+                            <div class="bdoc-banner-title">
+                                <nb-icon icon="alert-triangle-outline" pack="eva"></nb-icon>
+                                BDOC FAFO MODE ENABLED
+                            </div>
+                        </div>
+                    </nb-alert>
+
+                    <!-- BDOC Temperature Control -->
+                    <div class="form-row">
+                        <label class="form-label">BDOC Overheat Temp:</label>
+                        <div class="form-control-wrapper">
+                            <input nbInput type="number" [(ngModel)]="bdocOverheatTemp" [ngModelOptions]="{standalone: true}"
+                                (change)="updateBdocOverheatTemp(bdocOverheatTemp)" min="40" max="120" step="1" />
+                            <small>Temperature threshold for BDOC mode (40-120°C, default 90°C)</small>
+                        </div>
+                    </div>
+
+                    <!-- Immersion Mode Toggle -->
+                    <div class="form-row">
+                        <label class="form-label">Immersion Mode:</label>
+                        <div class="form-control-wrapper">
+                            <nb-toggle [(ngModel)]="immersionModeEnabled" [ngModelOptions]="{standalone: true}"
+                                (checkedChange)="toggleImmersionMode()">
+                                {{ immersionModeEnabled ? 'ENABLED (Fans Disabled)' : 'DISABLED (Fans Active)' }}
+                            </nb-toggle>
+                            <small>Enable for liquid cooling (disables all fan control)</small>
                         </div>
                     </div>
                 </ng-container>
@@ -547,8 +456,111 @@
         </nb-card>
     </ng-template>
 
+    <!-- BDOC Warning Dialog 1 -->
+    <ng-template #bdocWarning1Dialog let-data let-ref="dialogRef">
+        <nb-card>
+            <nb-card-header>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <nb-icon icon="alert-triangle-outline" pack="eva" status="danger" style="font-size: 2rem;"></nb-icon>
+                    <span style="font-size: 1.5rem; font-weight: bold;">WARNING - BDOC MODE</span>
+                </div>
+            </nb-card-header>
+            <nb-card-body>
+                <p style="font-size: 1.1rem; margin-bottom: 20px;">
+                    <strong>You are about to enable Balls Deep Overclocking (BDOC) mode.</strong>
+                </p>
+                <p style="margin-bottom: 15px;">This mode will:</p>
+                <ul style="margin-bottom: 20px;">
+                    <li><strong>Remove ALL frequency and voltage limits</strong></li>
+                    <li>Allow you to set ANY frequency or voltage value</li>
+                    <li>Bypass all safety validation checks</li>
+                    <li>Potentially damage your hardware if used incorrectly</li>
+                </ul>
+                <p style="color: #ff3d71; font-weight: bold; margin-bottom: 20px;">
+                    ⚠️ This is an EXPERIMENTAL feature for advanced users only!
+                </p>
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button nbButton status="basic" (click)="cancelBdocMode()">Cancel</button>
+                    <button nbButton status="danger" (click)="showBdocWarning2(bdocWarning2Dialog)">I Understand - Continue</button>
+                </div>
+            </nb-card-body>
+        </nb-card>
+    </ng-template>
 
+    <!-- BDOC Warning Dialog 2 -->
+    <ng-template #bdocWarning2Dialog let-data let-ref="dialogRef">
+        <nb-card>
+            <nb-card-header>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <nb-icon icon="alert-triangle-outline" pack="eva" status="danger" style="font-size: 2rem;"></nb-icon>
+                    <span style="font-size: 1.5rem; font-weight: bold;">SECOND WARNING</span>
+                </div>
+            </nb-card-header>
+            <nb-card-body>
+                <p style="font-size: 1.2rem; font-weight: bold; color: #ff3d71; margin-bottom: 20px;">
+                    ARE YOU ABSOLUTELY SURE?
+                </p>
+                <p style="margin-bottom: 15px;">
+                    By enabling BDOC mode, you acknowledge that:
+                </p>
+                <ul style="margin-bottom: 20px;">
+                    <li>You can set voltages that may <strong>instantly destroy your ASICs</strong></li>
+                    <li>You can set frequencies that cause <strong>thermal runaway</strong></li>
+                    <li>There is <strong>NO WARRANTY</strong> for hardware damage caused by BDOC mode</li>
+                    <li>You are using this feature <strong>AT YOUR OWN RISK</strong></li>
+                    <li>The manufacturer is <strong>NOT RESPONSIBLE</strong> for any damage</li>
+                </ul>
+                <p style="color: #ff3d71; font-weight: bold; margin-bottom: 20px;">
+                    ⚠️ YOU CAN BRICK YOUR DEVICE! ⚠️
+                </p>
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button nbButton status="basic" (click)="cancelBdocMode()">Cancel (Recommended)</button>
+                    <button nbButton status="danger" (click)="showBdocWarning3(bdocWarning3Dialog)">I Accept The Risk</button>
+                </div>
+            </nb-card-body>
+        </nb-card>
+    </ng-template>
 
-
+    <!-- BDOC Warning Dialog 3 (Final) -->
+    <ng-template #bdocWarning3Dialog let-data let-ref="dialogRef">
+        <nb-card>
+            <nb-card-header>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <nb-icon icon="skull-outline" pack="eva" status="danger" style="font-size: 2.5rem;"></nb-icon>
+                    <span style="font-size: 1.8rem; font-weight: bold; color: #ff3d71;">FINAL WARNING</span>
+                </div>
+            </nb-card-header>
+            <nb-card-body>
+                <p style="font-size: 1.3rem; font-weight: bold; color: #ff3d71; text-align: center; margin-bottom: 20px;">
+                    🔥 FUCK AROUND AND FIND OUT MODE 🔥
+                </p>
+                <p style="font-size: 1.1rem; text-align: center; margin-bottom: 20px;">
+                    This is your <strong>LAST CHANCE</strong> to turn back.
+                </p>
+                <div style="background-color: #ff3d71; color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                    <p style="font-weight: bold; margin-bottom: 10px; font-size: 1.1rem;">
+                        BY CLICKING "ENABLE BDOC MODE", YOU CONFIRM:
+                    </p>
+                    <ul style="margin-bottom: 0;">
+                        <li>I understand all frequency and voltage limits will be removed</li>
+                        <li>I understand I can permanently damage my hardware</li>
+                        <li>I accept full responsibility for any consequences</li>
+                        <li>I will not seek warranty support for BDOC-related damage</li>
+                        <li>I am prepared to F*** Around And Find Out</li>
+                    </ul>
+                </div>
+                <p style="text-align: center; font-size: 0.9rem; margin-bottom: 20px; font-style: italic;">
+                    "With great power comes great responsibility... and possibly smoke."
+                </p>
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button nbButton status="success" (click)="cancelBdocMode()">Cancel (Smart Choice)</button>
+                    <button nbButton status="danger" (click)="enableBdocMode()">
+                        <nb-icon icon="flash-outline" pack="eva"></nb-icon>
+                        ENABLE BDOC MODE
+                    </button>
+                </div>
+            </nb-card-body>
+        </nb-card>
+    </ng-template>
 
 </ng-container>

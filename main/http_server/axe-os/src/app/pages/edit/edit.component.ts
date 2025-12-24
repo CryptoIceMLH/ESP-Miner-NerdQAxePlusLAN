@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Input, OnInit, OnDestroy, TemplateRef } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { switchMap, forkJoin, startWith, tap, catchError, of, interval, takeUntil, Subject } from 'rxjs';
+import { switchMap, forkJoin, startWith, tap, catchError, of } from 'rxjs';
 import { LoadingService } from '../../services/loading.service';
 import { SystemService } from '../../services/system.service';
 import { eASICModel } from '../../models/enum/eASICModel';
@@ -10,7 +10,6 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { OtpAuthService, EnsureOtpResult } from '../../services/otp-auth.service';
 import { TranslateService } from '@ngx-translate/core';
 import { IStratum } from 'src/app/models/IStratum';
-import { IEthernetConfig } from '../../models/IEthernetConfig';
 
 enum SupportLevel { Safe = 0, Advanced = 1, Pro = 2 }
 
@@ -19,7 +18,7 @@ enum SupportLevel { Safe = 0, Advanced = 1, Pro = 2 }
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss']
 })
-export class EditComponent implements OnInit, OnDestroy {
+export class EditComponent implements OnInit {
   public supportLevel: SupportLevel = SupportLevel.Safe;
 
   public form!: FormGroup;
@@ -54,17 +53,13 @@ export class EditComponent implements OnInit, OnDestroy {
 
   private stratum : IStratum = null;
 
-  // Ethernet state variables
-  public wifiIpv4: string = '';
-  public wifiStatus: string = '';
-  public wifiRSSI: number = -128;
-  public networkMode: string = 'wifi';
-  public ethAvailable: number = 0;
-  public ethLinkUp: number = 0;
-  public ethConnected: number = 0;
-  public ethIPv4: string = '0.0.0.0';
-  public ethMac: string = '00:00:00:00:00:00';
-  private destroy$ = new Subject<void>();
+  // BDOC mode state
+  public bdocModeEnabled: boolean = false;
+  public bdocOverheatTemp: number = 90;
+  public immersionModeEnabled: boolean = false;
+  private preBdocFrequency: number = 0;
+  private preBdocVoltage: number = 0;
+  public bdocDialogRef!: NbDialogRef<any>;
 
   private rebootRequiredFields = new Set<string>([
     'flipscreen',
@@ -95,13 +90,10 @@ export class EditComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     forkJoin({
       info: this.systemService.getInfo(0, this.uri),
-      asic: this.systemService.getAsicInfo(this.uri),
-      ethernet: this.systemService.getEthernetStatus(this.uri).pipe(
-        catchError(err => of(null))
-      )
+      asic: this.systemService.getAsicInfo(this.uri)
     })
       .pipe(this.loadingService.lockUIUntilComplete())
-      .subscribe(({ info, asic, ethernet }) => {
+      .subscribe(({ info, asic }) => {
         this.originalSettings = structuredClone(info);
 
         // nasty work around
@@ -109,16 +101,10 @@ export class EditComponent implements OnInit, OnDestroy {
 
         this.otpEnabled = !!info.otp;
 
-        // Load Ethernet status
-        this.wifiIpv4 = info.hostip || '';
-        this.wifiStatus = info.wifiStatus || '';
-        this.wifiRSSI = info.wifiRSSI || -128;
-        this.networkMode = info.networkMode || 'wifi';
-        this.ethAvailable = info.ethAvailable || 0;
-        this.ethLinkUp = info.ethLinkUp || 0;
-        this.ethConnected = info.ethConnected || 0;
-        this.ethIPv4 = info.ethIPv4 || '0.0.0.0';
-        this.ethMac = info.ethMac || '00:00:00:00:00:00';
+        // Load BDOC mode state
+        this.bdocModeEnabled = info.bdocMode ?? false;
+        this.bdocOverheatTemp = info.bdocOverheatTemp ?? 90;
+        this.immersionModeEnabled = info.immersionMode ?? false;
 
         // Model still from /info (enum-typed)
         this.ASICModel = info.ASICModel;
@@ -248,13 +234,6 @@ export class EditComponent implements OnInit, OnDestroy {
             Validators.required,
           ]],
           otpEnabled: [info.otp],
-
-          // Ethernet configuration
-          ethUseDHCP: [ethernet?.ethUseDHCP ?? 1, []],
-          ethStaticIP: [ethernet?.ethStaticIP ?? '', [Validators.pattern(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)]],
-          ethGateway: [ethernet?.ethGateway ?? '', [Validators.pattern(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)]],
-          ethSubnet: [ethernet?.ethSubnet ?? '', [Validators.pattern(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)]],
-          ethDNS: [ethernet?.ethDNS ?? '', [Validators.pattern(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)]],
         });
 
         this.stratum = info.stratum;
@@ -264,9 +243,6 @@ export class EditComponent implements OnInit, OnDestroy {
           .subscribe(() => this.updatePIDFieldStates());
 
         this.updatePIDFieldStates();
-
-        // Start periodic network status refresh
-        this.startNetworkStatusRefresh();
       });
   }
 
@@ -324,32 +300,7 @@ export class EditComponent implements OnInit, OnDestroy {
       form.totp = this.pendingTotp;
     }
 
-    // Extract Ethernet config if present
-    const ethConfig = {
-      ethUseDHCP: form.ethUseDHCP ? 1 : 0,
-      ethStaticIP: form.ethStaticIP || '',
-      ethGateway: form.ethGateway || '',
-      ethSubnet: form.ethSubnet || '',
-      ethDNS: form.ethDNS || ''
-    };
-
-    // Remove Ethernet fields from main form (they have separate endpoint)
-    delete form.ethUseDHCP;
-    delete form.ethStaticIP;
-    delete form.ethGateway;
-    delete form.ethSubnet;
-    delete form.ethDNS;
-
-    // Update main system settings
-    return this.systemService.updateSystem(this.uri, form, totp).pipe(
-      switchMap(() => {
-        // Also update Ethernet config if available
-        if (this.ethAvailable) {
-          return this.systemService.updateEthernetConfig(this.uri, ethConfig, totp);
-        }
-        return of(null);
-      })
-    );
+    return this.systemService.updateSystem(this.uri, form, totp)
   }
 
   get requiresReboot(): boolean {
@@ -403,7 +354,26 @@ export class EditComponent implements OnInit, OnDestroy {
 
   public setDevToolsOpen(supportLevel: number) {
     this.supportLevel = supportLevel;
-    console.log('Advanced Mode:', supportLevel);
+    console.log('BDOC Support Level:', supportLevel);
+
+    // Enable/disable BDOC mode based on support level - ONLY at level 2 (double-click)
+    if (supportLevel === 2 && !this.bdocModeEnabled) {
+      this.bdocModeEnabled = true;
+      this.removeBdocValidators();
+      this.systemService.updateSystem(this.uri, { bdocMode: true }).subscribe({
+        next: () => {
+          this.toastrService.warning('BDOC MODE ENABLED - All frequency/voltage limits removed!', 'Warning', { duration: 5000 });
+        }
+      });
+    } else if (supportLevel < 2 && this.bdocModeEnabled) {
+      this.bdocModeEnabled = false;
+      this.restoreBdocValidators();
+      this.systemService.updateSystem(this.uri, { bdocMode: false }).subscribe({
+        next: () => {
+          this.toastrService.success('BDOC mode disabled - Safe limits restored', 'Success');
+        }
+      });
+    }
 
     const freqBase = this.asicFrequencyValues.map(v => {
       let suffix = '';
@@ -551,62 +521,201 @@ export class EditComponent implements OnInit, OnDestroy {
     return `Pool ${i + 1}`;
   }
 
-  private startNetworkStatusRefresh(): void {
-    // Poll network status every 5 seconds
-    interval(5000)
-      .pipe(
-        startWith(0),
-        switchMap(() => this.systemService.getInfo(0, this.uri)),
-        takeUntil(this.destroy$)
-      )
-      .subscribe({
-        next: (info) => {
-          this.wifiIpv4 = info.hostip || '';
-          this.wifiStatus = info.wifiStatus || '';
-          this.wifiRSSI = info.wifiRSSI || -128;
-          this.networkMode = info.networkMode || 'wifi';
-          this.ethAvailable = info.ethAvailable || 0;
-          this.ethLinkUp = info.ethLinkUp || 0;
-          this.ethConnected = info.ethConnected || 0;
-          this.ethIPv4 = info.ethIPv4 || '0.0.0.0';
-          this.ethMac = info.ethMac || '00:00:00:00:00:00';
-        },
-        error: (err) => console.error('Network status refresh error:', err)
-      });
+  // BDOC Mode Methods
+
+  /**
+   * Attempt to enable BDOC mode - show first warning dialog
+   */
+  public attemptEnableBdocMode(dialog: TemplateRef<any>): void {
+    // Save current values to restore later if needed
+    this.preBdocFrequency = this.form.controls['frequency'].value;
+    this.preBdocVoltage = this.form.controls['coreVoltage'].value;
+
+    // Show first warning dialog
+    this.bdocDialogRef = this.dialogService.open(dialog, { closeOnBackdropClick: false });
   }
 
-  public switchNetworkMode(mode: string): void {
-    this.otpAuth.ensureOtp$(
-      this.uri,
-      this.translate.instant('SECURITY.OTP_TITLE'),
-      this.translate.instant('NETWORK.SWITCH_MODE_HINT')
-    )
-      .pipe(
-        switchMap(({ totp }: EnsureOtpResult) =>
-          this.systemService.switchNetworkMode(this.uri, mode, totp).pipe(
-            this.loadingService.lockUIUntilComplete()
-          )
-        )
-      )
+  /**
+   * Show second warning dialog
+   */
+  public showBdocWarning2(dialog: TemplateRef<any>): void {
+    this.bdocDialogRef.close();
+    this.bdocDialogRef = this.dialogService.open(dialog, { closeOnBackdropClick: false });
+  }
+
+  /**
+   * Show third (final) warning dialog
+   */
+  public showBdocWarning3(dialog: TemplateRef<any>): void {
+    this.bdocDialogRef.close();
+    this.bdocDialogRef = this.dialogService.open(dialog, { closeOnBackdropClick: false });
+  }
+
+  /**
+   * User cancelled BDOC enable flow
+   */
+  public cancelBdocMode(): void {
+    this.bdocDialogRef.close();
+  }
+
+  /**
+   * Final confirmation - actually enable BDOC mode
+   */
+  public enableBdocMode(): void {
+    this.bdocDialogRef.close();
+
+    // Remove validators from frequency and voltage
+    this.form.controls['frequency'].clearValidators();
+    this.form.controls['frequency'].setValidators([Validators.required]);
+    this.form.controls['frequency'].updateValueAndValidity();
+
+    this.form.controls['coreVoltage'].clearValidators();
+    this.form.controls['coreVoltage'].setValidators([Validators.required]);
+    this.form.controls['coreVoltage'].updateValueAndValidity();
+
+    // Enable BDOC mode
+    this.bdocModeEnabled = true;
+
+    // Save to backend
+    this.systemService.updateSystem(this.uri, { bdocMode: true })
+      .pipe(this.loadingService.lockUIUntilComplete())
       .subscribe({
         next: () => {
-          this.toastrService.success(
-            this.translate.instant('NETWORK.MODE_SWITCHED'),
-            this.translate.instant('NETWORK.RESTART_REQUIRED')
-          );
+          this.toastrService.warning('BDOC MODE ENABLED - All limits removed!', 'Warning', { duration: 5000 });
         },
         error: (err: HttpErrorResponse) => {
-          this.toastrService.danger(
-            this.translate.instant('COMMON.ERROR'),
-            this.translate.instant('NETWORK.MODE_SWITCH_FAILED') + ` ${err.message}`
-          );
+          this.toastrService.danger('Failed to enable BDOC mode', 'Error');
+          console.error(err);
         }
       });
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+  /**
+   * Disable BDOC mode - restore validators and clamp values
+   */
+  public disableBdocMode(): void {
+    // Restore validators
+    this.form.controls['coreVoltage'].setValidators([Validators.min(1005), Validators.max(1400), Validators.required]);
+    this.form.controls['coreVoltage'].updateValueAndValidity();
+
+    this.form.controls['frequency'].setValidators([Validators.required]);
+    this.form.controls['frequency'].updateValueAndValidity();
+
+    // Clamp current values to safe limits
+    const currentFreq = this.form.controls['frequency'].value;
+    const currentVolt = this.form.controls['coreVoltage'].value;
+
+    if (this.asicFrequencyValues.length) {
+      const maxFreq = Math.max(...this.asicFrequencyValues);
+      if (currentFreq > maxFreq) {
+        this.form.controls['frequency'].setValue(maxFreq);
+      }
+    }
+
+    if (currentVolt > 1400) {
+      this.form.controls['coreVoltage'].setValue(1400);
+    } else if (currentVolt < 1005) {
+      this.form.controls['coreVoltage'].setValue(1005);
+    }
+
+    // Disable BDOC mode
+    this.bdocModeEnabled = false;
+
+    // Save to backend
+    this.systemService.updateSystem(this.uri, {
+      bdocMode: false,
+      frequency: this.form.controls['frequency'].value,
+      coreVoltage: this.form.controls['coreVoltage'].value
+    })
+      .pipe(this.loadingService.lockUIUntilComplete())
+      .subscribe({
+        next: () => {
+          this.toastrService.success('BDOC mode disabled - Safe limits restored', 'Success');
+        },
+        error: (err: HttpErrorResponse) => {
+          this.toastrService.danger('Failed to disable BDOC mode', 'Error');
+          console.error(err);
+        }
+      });
+  }
+
+  /**
+   * Update BDOC overheat temperature
+   */
+  public updateBdocOverheatTemp(newTemp: number): void {
+    this.bdocOverheatTemp = newTemp;
+    this.systemService.updateSystem(this.uri, { bdocOverheatTemp: newTemp })
+      .subscribe({
+        error: (err: HttpErrorResponse) => {
+          this.toastrService.danger('Failed to update BDOC overheat temperature', 'Error');
+          console.error(err);
+        }
+      });
+  }
+
+  /**
+   * Toggle Immersion mode
+   */
+  public toggleImmersionMode(): void {
+    this.immersionModeEnabled = !this.immersionModeEnabled;
+
+    this.systemService.updateSystem(this.uri, { immersionMode: this.immersionModeEnabled })
+      .pipe(this.loadingService.lockUIUntilComplete())
+      .subscribe({
+        next: () => {
+          const msg = this.immersionModeEnabled
+            ? 'Immersion mode enabled - Fans disabled'
+            : 'Immersion mode disabled - Fans re-enabled';
+          this.toastrService.success(msg, 'Success');
+        },
+        error: (err: HttpErrorResponse) => {
+          // Revert on error
+          this.immersionModeEnabled = !this.immersionModeEnabled;
+          this.toastrService.danger('Failed to toggle immersion mode', 'Error');
+          console.error(err);
+        }
+      });
+  }
+
+  /**
+   * Helper: Remove validators for BDOC mode
+   */
+  private removeBdocValidators(): void {
+    this.form.controls['frequency'].clearValidators();
+    this.form.controls['frequency'].setValidators([Validators.required]);
+    this.form.controls['frequency'].updateValueAndValidity();
+
+    this.form.controls['coreVoltage'].clearValidators();
+    this.form.controls['coreVoltage'].setValidators([Validators.required]);
+    this.form.controls['coreVoltage'].updateValueAndValidity();
+  }
+
+  /**
+   * Helper: Restore validators when exiting BDOC mode
+   */
+  private restoreBdocValidators(): void {
+    this.form.controls['coreVoltage'].setValidators([Validators.min(1005), Validators.max(1400), Validators.required]);
+    this.form.controls['coreVoltage'].updateValueAndValidity();
+
+    this.form.controls['frequency'].setValidators([Validators.required]);
+    this.form.controls['frequency'].updateValueAndValidity();
+
+    // Clamp current values to safe limits
+    const currentFreq = this.form.controls['frequency'].value;
+    const currentVolt = this.form.controls['coreVoltage'].value;
+
+    if (this.asicFrequencyValues.length) {
+      const maxFreq = Math.max(...this.asicFrequencyValues);
+      if (currentFreq > maxFreq) {
+        this.form.controls['frequency'].setValue(maxFreq);
+      }
+    }
+
+    if (currentVolt > 1400) {
+      this.form.controls['coreVoltage'].setValue(1400);
+    } else if (currentVolt < 1005) {
+      this.form.controls['coreVoltage'].setValue(1005);
+    }
   }
 }
 

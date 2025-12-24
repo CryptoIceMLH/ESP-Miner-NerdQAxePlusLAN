@@ -17,25 +17,37 @@ Board::Board() {
     m_ecoAsicFrequency = 0;
     m_ecoAsicVoltageMillis = 0;
     m_numFans = 1;
+    m_bdocMode = false;
 }
 
 void Board::loadSettings()
 {
     m_fanPerc = Config::getFanSpeed();
 
+    // Load BDOC mode from NVS
+    m_bdocMode = Config::getBDOCMode();
+
     // default values are initialized in the constructor of each board
 
-    // clamp frequency and voltage to absMax values
-    if (m_absMaxAsicFrequency) {
-        m_asicFrequency = std::min((int) Config::getAsicFrequency(m_asicFrequency), m_absMaxAsicFrequency);
-    } else {
+    // clamp frequency and voltage to absMax values (UNLESS BDOC mode)
+    if (m_bdocMode) {
+        // BDOC MODE - No clamping, accept any values
         m_asicFrequency = (int) Config::getAsicFrequency(m_asicFrequency);
-    }
-
-    if (m_absMaxAsicVoltageMillis) {
-        m_asicVoltageMillis = std::min((int) Config::getAsicVoltage(m_asicVoltageMillis), m_absMaxAsicVoltageMillis);
-    } else {
         m_asicVoltageMillis = (int) Config::getAsicVoltage(m_asicVoltageMillis);
+        ESP_LOGW(TAG, "BDOC MODE ENABLED - Frequency and voltage limits REMOVED");
+    } else {
+        // NORMAL MODE - Clamp to board limits
+        if (m_absMaxAsicFrequency) {
+            m_asicFrequency = std::min((int) Config::getAsicFrequency(m_asicFrequency), m_absMaxAsicFrequency);
+        } else {
+            m_asicFrequency = (int) Config::getAsicFrequency(m_asicFrequency);
+        }
+
+        if (m_absMaxAsicVoltageMillis) {
+            m_asicVoltageMillis = std::min((int) Config::getAsicVoltage(m_asicVoltageMillis), m_absMaxAsicVoltageMillis);
+        } else {
+            m_asicVoltageMillis = (int) Config::getAsicVoltage(m_asicVoltageMillis);
+        }
     }
 
     m_asicJobIntervalMs = Config::getAsicJobInterval(m_asicJobIntervalMs);
@@ -154,6 +166,12 @@ void Board::setVrFrequency(uint32_t freq) {
 }
 
 bool Board::validateVoltage(float core_voltage) {
+    // BDOC mode bypasses validation
+    if (m_bdocMode) {
+        ESP_LOGW(TAG, "BDOC MODE: Accepting voltage %.3fV without validation", core_voltage);
+        return true;
+    }
+
     int millis = (int) (core_voltage * 1000.0f);
     // we allow m_absMaxAsicVoltageMillis = 0 for no limit to not break what was
     // working before on nerdaxe and nerdaxegamma
@@ -165,6 +183,12 @@ bool Board::validateVoltage(float core_voltage) {
 }
 
 bool Board::validateFrequency(float frequency) {
+    // BDOC mode bypasses validation
+    if (m_bdocMode) {
+        ESP_LOGW(TAG, "BDOC MODE: Accepting frequency %.3f MHz without validation", frequency);
+        return true;
+    }
+
     // we allow m_absMaxAsicFrequency = 0 for no limit to not break what was
     // working before on nerdaxe and nerdaxegamma
     if (m_absMaxAsicFrequency && frequency > (float) m_absMaxAsicFrequency) {
@@ -172,4 +196,26 @@ bool Board::validateFrequency(float frequency) {
         return false;
     }
     return true;
+}
+
+void Board::setBDOCMode(bool enabled) {
+    m_bdocMode = enabled;
+    Config::setBDOCMode(enabled);
+
+    if (!enabled) {
+        // Clamp current values to safe limits when disabling BDOC
+        if (m_absMaxAsicFrequency && m_asicFrequency > m_absMaxAsicFrequency) {
+            m_asicFrequency = m_absMaxAsicFrequency;
+            Config::setAsicFrequency(m_asicFrequency);
+            ESP_LOGW(TAG, "BDOC disabled: Clamped frequency to %d MHz", m_asicFrequency);
+        }
+
+        if (m_absMaxAsicVoltageMillis && m_asicVoltageMillis > m_absMaxAsicVoltageMillis) {
+            m_asicVoltageMillis = m_absMaxAsicVoltageMillis;
+            Config::setAsicVoltage(m_asicVoltageMillis);
+            ESP_LOGW(TAG, "BDOC disabled: Clamped voltage to %d mV", m_asicVoltageMillis);
+        }
+    } else {
+        ESP_LOGW(TAG, "BDOC MODE ENABLED - All frequency and voltage limits bypassed!");
+    }
 }

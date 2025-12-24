@@ -285,13 +285,22 @@ void PowerManagementTask::task()
             vTaskSuspend(NULL);
         }
 
-        uint16_t asic_overheat_temp = Config::getOverheatTemp();
+        uint16_t asic_overheat_temp;
         uint16_t temp_control_mode = Config::getTempControlMode();
 
-        // overwrite previously allowed 0 value to disable
-        // over-temp shutdown
-        if (!asic_overheat_temp) {
-            asic_overheat_temp = 70;
+        if (Config::getBDOCMode()) {
+            // BDOC MODE - Use higher temperature threshold
+            asic_overheat_temp = Config::getBDOCOverheatTemp();
+            if (!asic_overheat_temp) {
+                asic_overheat_temp = 90;  // Default 90°C for BDOC
+            }
+            ESP_LOGW(TAG, "BDOC MODE: Using overheat threshold %d°C", asic_overheat_temp);
+        } else {
+            // NORMAL MODE - Use standard threshold
+            asic_overheat_temp = Config::getOverheatTemp();
+            if (!asic_overheat_temp) {
+                asic_overheat_temp = 70;  // Default 70°C for normal mode
+            }
         }
 
         applyAsicSettings();
@@ -306,8 +315,15 @@ void PowerManagementTask::task()
 
         readAndPublishPowerTelemetry();
 
-        for (int i = 0; i < m_board->getNumFans(); i++) {
-            m_board->getFanSpeedCh(i, &m_fanRPM[i]);
+        if (!Config::isImmersionModeEnabled()) {
+            for (int i = 0; i < m_board->getNumFans(); i++) {
+                m_board->getFanSpeedCh(i, &m_fanRPM[i]);
+            }
+        } else {
+            // Immersion mode - clear RPM readings
+            for (int i = 0; i < m_board->getNumFans(); i++) {
+                m_fanRPM[i] = 0;
+            }
         }
         influx_set_fan(m_fanPerc, (float) m_fanRPM[0], m_fanPerc, (float) m_fanRPM[1]);
 
@@ -363,23 +379,25 @@ void PowerManagementTask::task()
         pid_input = std::max(m_chipTempMax, m_vrTemp);
         m_pid->Compute();
 
-        switch (temp_control_mode) {
-        case 0:
-            // manual
-            m_fanPerc = Config::getFanSpeed();
-            m_board->setFanSpeed((float) m_fanPerc / 100.0f);
-            break;
-        case 2:
-            // pid
-            m_fanPerc = (uint16_t) roundf(pid_output);
-            m_board->setFanSpeed((float) m_fanPerc / 100.0f);
-            // ESP_LOGI(TAG, "PID: Temp: %.1f°C, SetPoint: %.1f°C, Output: %.1f%%", pid_input, pid_target, pid_output);
-            // ESP_LOGI(TAG, "p:%.2f i:%.2f d:%.2f", m_pid->GetKp(), m_pid->GetKi(), m_pid->GetKd());
-            break;
-        default:
-            ESP_LOGE(TAG, "invalid temp control mode: %d. Defaulting to manual mode 100%%.", temp_control_mode);
-            m_fanPerc = 100;
-            m_board->setFanSpeed((float) m_fanPerc / 100.0f);
+        if (!Config::isImmersionModeEnabled()) {
+            switch (temp_control_mode) {
+            case 0:
+                // manual
+                m_fanPerc = Config::getFanSpeed();
+                m_board->setFanSpeed((float) m_fanPerc / 100.0f);
+                break;
+            case 2:
+                // pid
+                m_fanPerc = (uint16_t) roundf(pid_output);
+                m_board->setFanSpeed((float) m_fanPerc / 100.0f);
+                // ESP_LOGI(TAG, "PID: Temp: %.1f°C, SetPoint: %.1f°C, Output: %.1f%%", pid_input, pid_target, pid_output);
+                // ESP_LOGI(TAG, "p:%.2f i:%.2f d:%.2f", m_pid->GetKp(), m_pid->GetKi(), m_pid->GetKd());
+                break;
+            default:
+                ESP_LOGE(TAG, "invalid temp control mode: %d. Defaulting to manual mode 100%%.", temp_control_mode);
+                m_fanPerc = 100;
+                m_board->setFanSpeed((float) m_fanPerc / 100.0f);
+            }
         }
         unlock();
         // uint64_t end = esp_timer_get_time();

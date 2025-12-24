@@ -1,23 +1,23 @@
-# GitHub Release - V3.2 (TNA Edition)
+# GitHub Release - TNA-V3.2
 
 ## 📋 Release Information
 
-**Tag Name:** `v3.2`
-**Release Title:** `V3.2 (TNA Edition) - Dual Network Dual Pool Support`
-**Target:** `main` branch
+**Tag Name:** `TNA-V3.2`
+**Release Title:** `TNA-V3.2 - Dual Network Dual Pool Support`
+**Target:** `develop` branch
 
 ---
 
 ## 📝 Release Description (Copy to GitHub)
 
 ```markdown
-# ESP-Miner NerdQAxePlus V3.2 - TNA Edition
+# ESP-Miner NerdQAxePlus TNA-V3.2
 
 ## 🌟 Highlights
 
 **Dual Network Dual Pool Architecture** - Production-ready firmware with native W5500 Ethernet support, intelligent WiFi fallback, and parallel pool mining capability.
 
-## 🆕 What's New in V3.2
+## 🆕 What's New in TNA-V3.2
 
 ### Major Features
 - ✅ **Dual Pool Mining** - Run two pool jobs in parallel for increased efficiency
@@ -48,11 +48,11 @@
 
 ## 📦 What's Included
 
-- Complete source code with all V3.2 enhancements
+- Complete source code with all TNA-V3.2 enhancements
 - W5500 Ethernet driver (ESP-IDF native)
 - AxeOS web interface
 - Build configuration and documentation
-- CHANGELOG with detailed V3.1 → V3.2 changes
+- CHANGELOG with detailed V3.1 → TNA-V3.2 changes
 
 ## 🔧 Requirements
 
@@ -83,7 +83,7 @@ idf.py menuconfig
 ## 📖 Documentation
 
 - **README.md** - Complete feature documentation
-- **CHANGELOG.md** - V3.1 → V3.2 detailed changes
+- **CHANGELOG.md** - V3.1 → TNA-V3.2 detailed changes
 - **REPO_PREPARATION.md** - Developer setup guide
 
 ## 🙏 Support Development
@@ -118,10 +118,10 @@ After you push the code, create and push the tag:
 
 ```bash
 # Create annotated tag
-git tag -a v3.2 -m "Release V3.2 (TNA Edition) - Dual Network Dual Pool Support"
+git tag -a TNA-V3.2 -m "Release TNA-V3.2 - Dual Network Dual Pool Support"
 
 # Push tag to GitHub
-git push origin v3.2
+git push origin TNA-V3.2
 ```
 
 ---
@@ -143,9 +143,9 @@ idf.py build
 
 ## 🎯 GitHub Release Checklist
 
-- [ ] Push all code to main branch
-- [ ] Create tag `v3.2`
-- [ ] Create GitHub Release with tag `v3.2`
+- [ ] Push all code to develop branch
+- [ ] Create tag `TNA-V3.2`
+- [ ] Create GitHub Release with tag `TNA-V3.2`
 - [ ] Copy release description from above
 - [ ] Attach firmware binary (optional)
 - [ ] Publish release

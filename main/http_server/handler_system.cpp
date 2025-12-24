@@ -110,6 +110,9 @@ esp_err_t GET_system_info(httpd_req_t *req)
     doc["duplicateHWNonces"]  = getDuplicateHWNonces();
     doc["isUsingFallbackStratum"] = STRATUM_MANAGER->isUsingFallback();
     doc["isStratumConnected"] = STRATUM_MANAGER->isAnyConnected();
+    doc["bdocMode"] = board->getBDOCMode();
+    doc["bdocOverheatTemp"] = Config::getBDOCOverheatTemp();
+    doc["immersionMode"] = Config::isImmersionModeEnabled();
 
     // Kept for swarm compatibility
     doc["poolDifficulty"]     = STRATUM_MANAGER->getPoolDifficulty();
@@ -307,6 +310,21 @@ esp_err_t PATCH_update_settings(httpd_req_t *req)
         if (frequency > 0) {
             Config::setAsicFrequency(frequency);
         }
+    }
+    if (doc["bdocMode"].is<bool>()) {
+        bool bdocMode = doc["bdocMode"].as<bool>();
+        Board* board = SYSTEM_MODULE.getBoard();
+        if (board) {
+            board->setBDOCMode(bdocMode);
+        }
+    }
+    if (doc["bdocOverheatTemp"].is<uint16_t>()) {
+        uint16_t bdocOverheatTemp = doc["bdocOverheatTemp"].as<uint16_t>();
+        Config::setBDOCOverheatTemp(bdocOverheatTemp);
+    }
+    if (doc["immersionMode"].is<bool>()) {
+        bool immersionMode = doc["immersionMode"].as<bool>();
+        Config::setImmersionMode(immersionMode);
     }
     if (doc["jobInterval"].is<uint16_t>()) {
         uint16_t jobInterval = doc["jobInterval"].as<uint16_t>();

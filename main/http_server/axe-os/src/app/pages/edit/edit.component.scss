@@ -176,127 +176,85 @@
         text-align: right;
         margin-right: 16px;
     }
-}
 
-// Network Mode Buttons
-.network-mode-buttons {
-  display: flex;
-  gap: 0.75rem;
-  margin-bottom: 0.5rem;
-
-  button {
-    width: auto;
-    min-width: 140px;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    justify-content: center;
-
-    nb-icon {
-      font-size: 1.25rem;
-    }
-  }
-}
-
-// Section Divider
-.section-divider {
-  border: none;
-  border-top: 1px solid;
-  margin: 1.5rem 0;
-}
-
-// Network Section Styles
-.network-section {
-  margin-bottom: 1.5rem;
-
-  .section-title {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 1.125rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid;
-
-    nb-icon {
-      font-size: 1.5rem;
-    }
-  }
-}
-
-// WiFi/Ethernet Status Display
-.wifi-status {
-  border-radius: 0.5rem;
-  padding: 1rem;
-  margin-top: 1rem;
-
-  .status-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid;
-
-    &:last-child {
-      border-bottom: none;
+    // BDOC Mode Styling
+    .bdoc-control-row {
+        margin-bottom: 20px;
+        margin-top: 10px;
     }
 
-    .status-label {
-      font-weight: 500;
+    .form-control-wrapper-full-width {
+        width: 100%;
     }
 
-    .status-value {
-      font-weight: 600;
+    .bdoc-banner {
+        margin-bottom: 20px;
+        background-color: #f2a900 !important;
+        border-left: 5px solid #ff3d71 !important;
+        animation: bdoc-pulse 2s infinite;
 
-      &.connected {
-        color: #00d68f;
-      }
+        ::ng-deep .alert-title {
+            color: #000 !important;
+            font-weight: bold;
+        }
+
+        ::ng-deep .alert-message {
+            color: #000 !important;
+        }
     }
-  }
-}
 
-// Static IP Section
-.static-ip-section {
-  border-radius: 0.5rem;
-  padding: 1rem;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  border: 1px solid;
-}
-
-// Toggle Wrapper
-.toggle-wrapper {
-  display: flex;
-  align-items: center;
-
-  nb-toggle {
-    margin-right: 0.5rem;
-  }
-}
-
-// Password Wrapper
-.password-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-
-  input {
-    flex: 1;
-  }
-
-  button {
-    flex-shrink: 0;
-  }
-}
-
-// Responsive
-@media (max-width: 768px) {
-  .network-mode-buttons {
-    flex-direction: column;
-
-    button {
-      width: 100%;
+    @keyframes bdoc-pulse {
+        0%, 100% {
+            box-shadow: 0 0 10px rgba(255, 61, 113, 0.5);
+        }
+        50% {
+            box-shadow: 0 0 20px rgba(255, 61, 113, 0.8);
+        }
     }
-  }
+
+    .bdoc-banner-content {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        color: #000;
+    }
+
+    .bdoc-banner-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: #000;
+
+        nb-icon {
+            font-size: 2rem;
+            color: #ff3d71;
+        }
+    }
+
+    .bdoc-temp-control {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        label {
+            font-weight: 600;
+            color: #000;
+            margin: 0;
+        }
+
+        input {
+            max-width: 100px;
+            font-weight: bold;
+        }
+    }
+
+    // Immersion Mode Styling
+    .immersion-control-row {
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--card-border-color);
+    }
 }
 

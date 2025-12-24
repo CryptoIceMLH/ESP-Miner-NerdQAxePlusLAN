@@ -53,6 +53,7 @@ public:
     int m_asicVoltageMillis;
     int m_absMaxAsicFrequency;
     int m_absMaxAsicVoltageMillis;
+    bool m_bdocMode;
 
     // frequency and voltage options
     std::vector<uint32_t> m_asicFrequencies;
@@ -115,6 +116,8 @@ public:
     virtual bool setAsicFrequency(float f);
     bool validateFrequency(float frequency);
     bool validateVoltage(float core_voltage);
+    void setBDOCMode(bool enabled);
+    bool getBDOCMode() const { return m_bdocMode; }
 
     void setVrFrequency(uint32_t freq);
 

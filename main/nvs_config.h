@@ -41,6 +41,9 @@
 #define NVS_CONFIG_SELF_TEST "selftest"
 #define NVS_CONFIG_AUTO_SCREEN_OFF "autoscreenoff"
 #define NVS_CONFIG_OVERHEAT_TEMP "overheat_temp"
+#define NVS_CONFIG_BDOC_MODE "bdoc_mode"
+#define NVS_CONFIG_BDOC_OVERHEAT_TEMP "bdoc_overheat"
+#define NVS_CONFIG_IMMERSION_MODE "immersion_mode"
 
 #define NVS_CONFIG_INFLUX_ENABLE "influx_enable"
 #define NVS_CONFIG_INFLUX_URL "influx_url"
@@ -158,6 +161,7 @@ namespace Config {
     inline uint16_t getStratumFallbackPortNumber() { return nvs_config_get_u16(NVS_CONFIG_STRATUM_FALLBACK_PORT, CONFIG_STRATUM_FALLBACK_PORT); }
     inline uint16_t getFanSpeed() { return nvs_config_get_u16(NVS_CONFIG_FAN_SPEED, CONFIG_FAN_SPEED); }
     inline uint16_t getOverheatTemp() { return nvs_config_get_u16(NVS_CONFIG_OVERHEAT_TEMP, CONFIG_OVERHEAT_TEMP); }
+    inline uint16_t getBDOCOverheatTemp() { return nvs_config_get_u16(NVS_CONFIG_BDOC_OVERHEAT_TEMP, 90); }
     inline uint16_t getInfluxPort() { return nvs_config_get_u16(NVS_CONFIG_INFLUX_PORT, CONFIG_INFLUX_PORT); }
     inline uint16_t getTempControlMode() { return nvs_config_get_u16(NVS_CONFIG_AUTO_FAN_SPEED, CONFIG_AUTO_FAN_SPEED_VALUE); }
     inline uint16_t getPoolMode() { return nvs_config_get_u16(NVS_CONFIG_POOL_MODE, 0); }
@@ -171,6 +175,7 @@ namespace Config {
     inline void setStratumFallbackPortNumber(uint16_t value) { nvs_config_set_u16(NVS_CONFIG_STRATUM_FALLBACK_PORT, value); }
     inline void setFanSpeed(uint16_t value) { nvs_config_set_u16(NVS_CONFIG_FAN_SPEED, value); }
     inline void setOverheatTemp(uint16_t value) { nvs_config_set_u16(NVS_CONFIG_OVERHEAT_TEMP, value); }
+    inline void setBDOCOverheatTemp(uint16_t value) { nvs_config_set_u16(NVS_CONFIG_BDOC_OVERHEAT_TEMP, value); }
     inline void setInfluxPort(uint16_t value) { nvs_config_set_u16(NVS_CONFIG_INFLUX_PORT, value); }
     inline void setTempControlMode(uint16_t value) { nvs_config_set_u16(NVS_CONFIG_AUTO_FAN_SPEED, value); }
     inline void setPoolMode(uint16_t value) { nvs_config_set_u16(NVS_CONFIG_POOL_MODE, value); }
@@ -203,6 +208,8 @@ namespace Config {
     inline bool isStratumEnonceSubscribe() { return nvs_config_get_u16(NVS_CONFIG_STRATUM_ENONCE_SUB, CONFIG_STRATUM_ENONCE_SUBSCRIBE_VALUE) != 0; }
     inline bool isStratumFallbackEnonceSubscribe() { return nvs_config_get_u16(NVS_CONFIG_STRATUM_FALLBACK_ENONCE_SUB, CONFIG_STRATUM_FALLBACK_ENONCE_SUBSCRIBE_VALUE) != 0; }
     inline bool isEthUseDHCP() { return nvs_config_get_u16(NVS_CONFIG_ETH_USE_DHCP, 1) != 0; }  // Default: DHCP enabled
+    inline bool getBDOCMode() { return nvs_config_get_u16(NVS_CONFIG_BDOC_MODE, 0) != 0; }
+    inline bool isImmersionModeEnabled() { return nvs_config_get_u16(NVS_CONFIG_IMMERSION_MODE, 0) != 0; }
 
     // ---- Boolean Setters ----
     inline void setFlipScreen(bool value) { nvs_config_set_u16(NVS_CONFIG_FLIP_SCREEN, value ? 1 : 0); }
@@ -217,6 +224,8 @@ namespace Config {
     inline void setStratumKeepaliveEnabled(bool value) { nvs_config_set_u16(NVS_CONFIG_STRATUM_KEEPALIVE, value ? 1 : 0); }
     inline void setStratumEnonceSubscribe(bool value) { nvs_config_set_u16(NVS_CONFIG_STRATUM_ENONCE_SUB, value ? 1 : 0); }
     inline void setStratumFallbackEnonceSubscribe(bool value) { nvs_config_set_u16(NVS_CONFIG_STRATUM_FALLBACK_ENONCE_SUB, value ? 1 : 0); }
+    inline void setBDOCMode(bool value) { nvs_config_set_u16(NVS_CONFIG_BDOC_MODE, value ? 1 : 0); }
+    inline void setImmersionMode(bool value) { nvs_config_set_u16(NVS_CONFIG_IMMERSION_MODE, value ? 1 : 0); }
 
     // with board specific default values
     inline uint16_t getAsicFrequency(uint16_t d) { return nvs_config_get_u16(NVS_CONFIG_ASIC_FREQ, d); }

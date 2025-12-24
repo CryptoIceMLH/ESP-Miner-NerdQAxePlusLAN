@@ -10,6 +10,7 @@ enum SupportLevel { Safe = 0, Advanced = 1, Pro = 2 }
 })
 export class AdvancedToggleComponent implements OnInit {
   @Output() advancedToggled = new EventEmitter<SupportLevel>();
+  @Output() bdocEnableRequested = new EventEmitter<void>(); // New event for BDOC warnings
 
   // New: single integer state (persisted)
   public supportLevel: SupportLevel = SupportLevel.Safe;

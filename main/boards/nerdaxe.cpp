@@ -205,6 +205,10 @@ bool NerdAxe::setVoltage(float core_voltage)
 }
 
 void NerdAxe::setFanSpeedCh(int channel, float perc) {
+    if (Config::isImmersionModeEnabled()) {
+        // Immersion mode - fans disabled, don't write to hardware
+        return;
+    }
     if (channel == 0) {
         EMC2101_set_fan_speed(perc);
     }
@@ -215,6 +219,11 @@ void NerdAxe::setFanPolarity(bool invert) {
 }
 
 void NerdAxe::getFanSpeedCh(int channel, uint16_t* rpm) {
+    if (Config::isImmersionModeEnabled()) {
+        // Immersion mode - report 0 RPM
+        *rpm = 0;
+        return;
+    }
     *rpm = EMC2101_get_fan_speed();
 }
 
