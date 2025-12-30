@@ -141,7 +141,15 @@ bool NerdQaxePlus::initAsics()
     vTaskDelay(pdMS_TO_TICKS(100));
 
     // init buck and enable output
-    m_tps->init(m_numPhases, m_imax, m_ifault);
+    // In BDOC mode, disable current protection by setting absurdly high limit
+    // CRITICAL: Keep m_imax unchanged - it configures current SENSING, not just limits
+    // Only change ifault to disable protection
+    if (m_bdocMode) {
+        ESP_LOGW(TAG, "BDOC MODE: Current protection DISABLED (ifault set to 1000A)");
+        m_tps->init(m_numPhases, m_imax, 1000.0f);  // Keep imax for correct sensing, high ifault to disable protection
+    } else {
+        m_tps->init(m_numPhases, m_imax, m_ifault);
+    }
 
     // set the init voltage
     // use the higher voltage for initialization

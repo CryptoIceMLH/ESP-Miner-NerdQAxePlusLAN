@@ -40,7 +40,7 @@ include_directories("./components/arduinojson")
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 
-set(PROJECT_VER "TNA-V3.3BDOC")
+set(PROJECT_VER "TNA-V3.4")
 
 project(esp-miner)
 

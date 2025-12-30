@@ -286,6 +286,8 @@ bool TPS53647::init(int num_phases, int imax, float ifault)
     write_byte(PMBUS_MFR_SPECIFIC_12, 0x20); // default value
 
     // set maximum current
+    // WARNING: PMBUS_MFR_SPECIFIC_10 affects current SENSING, not just limits
+    // DO NOT change this in BDOC mode or measurements will be wrong
     write_byte(PMBUS_MFR_SPECIFIC_10, (uint8_t) imax);
 
     // operation mode
@@ -306,10 +308,30 @@ bool TPS53647::init(int num_phases, int imax, float ifault)
     write_word(PMBUS_OT_WARN_LIMIT, float_to_slinear11(m_initOtWarnLimit));
     write_word(PMBUS_OT_FAULT_LIMIT, float_to_slinear11(m_initOtFaultLimit));
 
-    // Iout current
+    // Iout current (output current limits)
     // set warn and fault to the same value
     write_word(PMBUS_IOUT_OC_WARN_LIMIT, float_to_slinear11(ifault));
     write_word(PMBUS_IOUT_OC_FAULT_LIMIT, float_to_slinear11(ifault));
+
+    // Set IOUT fault response: in BDOC mode, don't shut down on overcurrent
+    if (ifault > 200.0f) {  // BDOC mode
+        // 0x00 = ignore fault, continue operation
+        write_byte(PMBUS_IOUT_OC_FAULT_RESPONSE, 0x00);
+        ESP_LOGW(TAG, "IOUT fault response set to IGNORE (continue operation)");
+    }
+
+    // Iin current (input current limits)
+    // set warn and fault to the same value
+    // Input current limit should be ifault / (Vout/Vin) but in BDOC mode just set to 1000A
+    write_word(PMBUS_IIN_OC_WARN_LIMIT, float_to_slinear11(ifault / 10.0f)); // Roughly Iout/10 for 12V->1.2V
+    write_word(PMBUS_IIN_OC_FAULT_LIMIT, float_to_slinear11(ifault / 10.0f));
+
+    // Set IIN fault response: in BDOC mode, don't shut down on overcurrent
+    if (ifault > 200.0f) {  // BDOC mode
+        // 0x00 = ignore fault, continue operation
+        write_byte(PMBUS_IIN_OC_FAULT_RESPONSE, 0x00);
+        ESP_LOGW(TAG, "IIN fault response set to IGNORE (continue operation)");
+    }
 
     m_initialized = true;
 
@@ -367,6 +389,10 @@ float TPS53647::get_pin(void)
     // Get voltage input (SLINEAR11)
     read_word(PMBUS_READ_PIN, &u16_value);
     pin = slinear11_to_float(u16_value);
+
+    // DEBUG: Always log PIN raw value to diagnose doubling issue
+    ESP_LOGI(TAG, "PMBUS_READ_PIN raw: 0x%04x, decoded: %2.3f W", u16_value, pin);
+
 #ifdef _DEBUG_LOG_
     ESP_LOGI(TAG, "Got Pin: %2.3f W", pin);
 #endif
@@ -439,6 +465,9 @@ float TPS53647::get_iin(void)
     // Get current output (SLINEAR11)
     read_word(PMBUS_READ_IIN, &u16_value);
     iin = slinear11_to_float(u16_value);
+
+    // DEBUG: Always log IIN raw value to diagnose doubling issue
+    ESP_LOGI(TAG, "PMBUS_READ_IIN raw: 0x%04x, decoded: %2.3f A", u16_value, iin);
 
 #ifdef _DEBUG_LOG_
     ESP_LOGI(TAG, "Got Iin: %2.3f A", iin);

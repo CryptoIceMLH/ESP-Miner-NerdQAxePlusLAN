@@ -1,8 +1,8 @@
-# V3.3BDOC Repository Cleanup Script
+# V3.4 Repository Cleanup Script
 # Run this from project root before committing to GitHub
 
 Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "  ESP-Miner V3.3BDOC Repository Cleanup" -ForegroundColor Cyan
+Write-Host "  ESP-Miner V3.4 Repository Cleanup" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 
 Write-Host "`nStarting repository cleanup..." -ForegroundColor Yellow
@@ -83,6 +83,6 @@ else
 Write-Host "`n📋 Next Steps:" -ForegroundColor Yellow
 Write-Host "  1. Review changes: git status" -ForegroundColor Gray
 Write-Host "  2. Add files: git add ." -ForegroundColor Gray
-Write-Host "  3. Commit: git commit -m 'feat: Add BDOC Mode (V3.3BDOC)'" -ForegroundColor Gray
+Write-Host "  3. Commit: git commit -m 'feat: BDOC Current Protection Disable (V3.4)'" -ForegroundColor Gray
 Write-Host "  4. Push to GitHub: git push origin develop" -ForegroundColor Gray
 Write-Host ""

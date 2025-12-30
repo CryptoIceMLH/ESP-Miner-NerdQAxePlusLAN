@@ -1,0 +1,939 @@
+Serial logging started...
+[0;32mI (1878) esp_netif_lwip: DHCP server started on interfaceI (4708) wifi:ap channel adjust o:1,1 n:9,2
+I (4708) wifi:new:<9,2>, old:<1,1>, ap:<9,2>, sta:<9,2>, prof:1, snd_ch_cfg:0x0
+I (4708) wifi:state: init -> auth (0xb0)
+I (5228) wifi:state: auth -> assoc (0x0)
+I (5248) wifi:Association refused temporarily time 1000, comeback time 1100 (TUs)
+I (6368) wifi:state: assoc -> auth (0xb0)
+I (6898) wifi:state: auth -> assoc (0x0)
+I (6928) wifi:state: assoc -> run (0x10)
+I (6948) wifi:connected with Dinky, aid = 1, channel 9, 40D, bssid = 9a:2a:6f:ee:44:9d
+I (6948) wifi:security: WPA3-SAE, phy: bgn, rssi: -54
+I (6958) wifi:pm start, type: 0
+
+I (6958) wifi:dp: 1, bi: 102400, li: 3, scale listen interval from 307200 us to 307200 us
+I (6968) wifi:set rx beacon pti, rx_bcn_pti: 0, bcn_timeout: 25000, mt_pti: 0, mt_time: 10000
+E (6978) wifi:sta is connecting, cannot set config
+I (7008) wifi:AP's beacon interval = 102400 us, DTIM period = 1
+I (7048) wifi:<ba-add>idx:0 (ifx:0, 9a:2a:6f:ee:44:9d), tid:0, ssn:0, winSize:64
+[0;32mI (8478) wifi station: Device ip: 192.168.1.29[0m
+[0;32mI (8478) esp_netif_handlers: sta ip: 192.168.1.29, mask: 255.255.255.0, gw: 192.168.1.1[0m
+[0;32mI (8478) nerd*axe: Connected to SSID: Dinky[0m
+[0;32mI (8488) board: ASIC Frequency: 600MHz[0m
+[0;32mI (8488) board: ASIC voltage: 1200mV[0m
+[0;32mI (8488) board: ASIC job interval: 500ms[0m
+[0;32mI (8498) board: invert fan polarity: false[0m
+[0;32mI (8498) board: fan speed: 100%[0m
+[0;32mI (8508) serial: Initializing serial[0m
+[0;32mI (8508) nerdqaxe+: found asic temp sensor 0[0m
+[0;32mI (8518) TMP1075.c: Failed to read temperature from TMP1075[0m
+[0;32mI (8518) nerdqaxe+: found 1 ASIC temp measuring sensors[0m
+[0;32mI (8528) emc2302: initializing EMC2302[0m
+[0;32mI (8528) emc2302: setting fan 0 speed to 10000.00% (0xff)[0m
+[0;32mI (8538) emc2302: setting fan 1 speed to 10000.00% (0xff)[0m
+[0;32mI (8538) emc2302: setting fan 0 speed to 10000.00% (0xff)[0m
+[0;32mI (8548) emc2302: setting fan 1 speed to 10000.00% (0xff)[0m
+[0;32mI (8558) nerd*axe: PSRAM found with 8MB[0m
+[0;32mI (8558) nerd*axe: Found Device Model: NerdQAxe++[0m
+[0;32mI (8568) nerd*axe: Found Board Version: 501[0m
+[0;32mI (8568) TDisplayS3: Screen on[0m
+[0;32mI (8568) INFO: Setting Up TDisplayS3 Screen[0m
+[0;32mI (8578) TDisplayS3: Turn off LCD backlight[0m
+[0;32mI (8578) gpio: GPIO[38]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 [0m
+[0;32mI (8588) TDisplayS3: Initialize Intel 8080 bus[0m
+[0;32mI (8598) TDisplayS3: Install LCD driver of st7789[0m
+[0;32mI (8598) gpio: GPIO[5]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 [0m
+[0;32mI (8618) time: SNTP started[0m
+[0;32mI (8618) nerdqaxe+: Set ASIC voltage = 0.000V[0m
+[0;32mI (8618) nerdqaxe+: Disable LDOs[0m
+I (8718) wifi:<ba-add>idx:1 (ifx:0, 9a:2a:6f:ee:44:9d), tid:6, ssn:2, winSize:64
+[0;32mI (8728) TDisplayS3: Turn on LCD backlight[0m
+[0;32mI (8728) TDisplayS3: Initialize LVGL library[0m
+[0;32mI (8728) TDisplayS3: Register display driver to LVGL[0m
+[0;32mI (8738) TDisplayS3: Install LVGL tick timer[0m
+[0;32mI (8738) TDisplayS3: Display LVGL animation[0m
+[0;32mI (8758) http_cors: Client IP: 192.168.1.109[0m
+[0;32mI (8758) http_cors: No Origin header found, assuming direct same-client access.[0m
+[0;32mI (8758) http_cors: allowed: both IPs private[0m
+[0;32mI (8768) http_system: cur: 1767049694287[0m
+[0;32mI (8798) TDisplayS3: enter state splash1[0m
+[0;32mI (8868) history: History size 32768 samples[0m
+[0;32mI (8868) SystemModule: SYSTEM_task started[0m
+[0;32mI (8878) nerdqaxe+: Enabled LDOs[0m
+[0;32mI (8978) TPS53647.c: Initializing the core voltage regulator[0m
+[0;32mI (8978) TPS53647.c: Device Code: 01f0[0m
+[0;32mI (8978) TPS53647.c: found TPS53647 controller[0m
+[0;32mI (8978) TPS53647.c: setting 3 phases[0m
+[0;32mI (8988) nerdqaxe+: Set ASIC voltage = 1.200V[0m
+[0;32mI (8988) TPS53647.c: Vout changed to 1.20 V[0m
+[0;32mI (9738) asic: found asic #1[0m
+[0;32mI (9748) asic: found asic #2[0m
+[0;32mI (9748) asic: found asic #3[0m
+[0;32mI (9748) asic: found asic #4[0m
+[0;32mI (10748) bm1370Module: 4 chip(s) detected on the chain, expected 4[0m
+[0;32mI (10748) asic: Setting ASIC difficulty mask to 2047[0m
+[0;32mI (10748) asic: Setting Frequency to 62.50MHz (62.50) (error: 0.00MHZ)[0m
+[0;32mI (10848) asic: Setting Frequency to 68.75MHz (68.75) (error: 0.00MHZ)[0m
+[0;32mI (10948) asic: Setting Frequency to 75.00MHz (75.00) (error: 0.00MHZ)[0m
+[0;32mI (11048) asic: Setting Frequency to 81.25MHz (81.25) (error: 0.00MHZ)[0m
+[0;32mI (11148) asic: Setting Frequency to 87.50MHz (87.50) (error: 0.00MHZ)[0m
+[0;32mI (11248) asic: Setting Frequency to 93.75MHz (93.75) (error: 0.00MHZ)[0m
+[0;32mI (11348) asic: Setting Frequency to 100.00MHz (100.00) (error: 0.00MHZ)[0m
+[0;32mI (11388) time: Time synchronized[0m
+[0;32mI (11448) asic: Setting Frequency to 106.25MHz (106.25) (error: 0.00MHZ)[0m
+[0;32mI (11548) asic: Setting Frequency to 112.50MHz (112.50) (error: 0.00MHZ)[0m
+[0;32mI (11648) asic: Setting Frequency to 118.75MHz (118.75) (error: 0.00MHZ)[0m
+[0;32mI (11748) asic: Setting Frequency to 125.00MHz (125.00) (error: 0.00MHZ)[0m
+[0;32mI (11848) asic: Setting Frequency to 131.25MHz (131.25) (error: 0.00MHZ)[0m
+[0;32mI (11848) TDisplayS3: enter state splash2[0m
+[0;32mI (11948) asic: Setting Frequency to 137.50MHz (137.50) (error: 0.00MHZ)[0m
+[0;32mI (12048) asic: Setting Frequency to 143.75MHz (143.75) (error: 0.00MHZ)[0m
+[0;32mI (12148) asic: Setting Frequency to 150.00MHz (150.00) (error: 0.00MHZ)[0m
+[0;32mI (12248) asic: Setting Frequency to 156.25MHz (156.25) (error: 0.00MHZ)[0m
+[0;32mI (12348) asic: Setting Frequency to 162.50MHz (162.50) (error: 0.00MHZ)[0m
+[0;32mI (12448) asic: Setting Frequency to 168.75MHz (168.75) (error: 0.00MHZ)[0m
+[0;32mI (12548) asic: Setting Frequency to 175.00MHz (175.00) (error: 0.00MHZ)[0m
+[0;32mI (12648) asic: Setting Frequency to 181.25MHz (181.25) (error: 0.00MHZ)[0m
+[0;32mI (12748) asic: Setting Frequency to 187.50MHz (187.50) (error: 0.00MHZ)[0m
+[0;32mI (12848) asic: Setting Frequency to 193.75MHz (193.75) (error: 0.00MHZ)[0m
+[0;32mI (12948) asic: Setting Frequency to 200.00MHz (200.00) (error: 0.00MHZ)[0m
+[0;32mI (13048) asic: Setting Frequency to 206.25MHz (206.25) (error: 0.00MHZ)[0m
+[0;32mI (13148) asic: Setting Frequency to 212.50MHz (212.50) (error: 0.00MHZ)[0m
+[0;32mI (13248) asic: Setting Frequency to 218.75MHz (218.75) (error: 0.00MHZ)[0m
+[0;32mI (13348) asic: Setting Frequency to 225.00MHz (225.00) (error: 0.00MHZ)[0m
+[0;32mI (13448) asic: Setting Frequency to 231.25MHz (231.25) (error: 0.00MHZ)[0m
+[0;32mI (13548) asic: Setting Frequency to 237.50MHz (237.50) (error: 0.00MHZ)[0m
+[0;32mI (13648) asic: Setting Frequency to 243.75MHz (243.75) (error: 0.00MHZ)[0m
+[0;32mI (13748) asic: Setting Frequency to 250.00MHz (250.00) (error: 0.00MHZ)[0m
+[0;32mI (13848) asic: Setting Frequency to 256.25MHz (256.25) (error: 0.00MHZ)[0m
+[0;32mI (13948) asic: Setting Frequency to 262.50MHz (262.50) (error: 0.00MHZ)[0m
+[0;32mI (14048) asic: Setting Frequency to 268.75MHz (268.75) (error: 0.00MHZ)[0m
+[0;32mI (14148) asic: Setting Frequency to 275.00MHz (275.00) (error: 0.00MHZ)[0m
+[0;32mI (14248) asic: Setting Frequency to 281.25MHz (281.25) (error: 0.00MHZ)[0m
+[0;32mI (14348) asic: Setting Frequency to 287.50MHz (287.50) (error: 0.00MHZ)[0m
+[0;32mI (14448) asic: Setting Frequency to 293.75MHz (294.64) (error: 0.89MHZ)[0m
+[0;32mI (14548) asic: Setting Frequency to 300.00MHz (300.00) (error: 0.00MHZ)[0m
+[0;32mI (14648) asic: Setting Frequency to 306.25MHz (307.14) (error: 0.89MHZ)[0m
+[0;32mI (14748) asic: Setting Frequency to 312.50MHz (312.50) (error: 0.00MHZ)[0m
+[0;32mI (14848) asic: Setting Frequency to 318.75MHz (319.64) (error: 0.89MHZ)[0m
+[0;32mI (14888) TDisplayS3: enter state wait[0m
+[0;32mI (14948) asic: Setting Frequency to 325.00MHz (325.00) (error: 0.00MHZ)[0m
+[0;32mI (14968) TDisplayS3: enter state mining[0m
+[0;32mI (14968) SystemModule: WiFi IP address: 192.168.1.29[0m
+[0;32mI (15048) asic: Setting Frequency to 331.25MHz (332.14) (error: 0.89MHZ)[0m
+[0;32mI (15148) asic: Setting Frequency to 337.50MHz (337.50) (error: 0.00MHZ)[0m
+[0;32mI (15248) asic: Setting Frequency to 343.75MHz (343.75) (error: 0.00MHZ)[0m
+[0;32mI (15348) asic: Setting Frequency to 350.00MHz (350.00) (error: 0.00MHZ)[0m
+[0;32mI (15448) asic: Setting Frequency to 356.25MHz (356.25) (error: 0.00MHZ)[0m
+[0;32mI (15548) asic: Setting Frequency to 362.50MHz (362.50) (error: 0.00MHZ)[0m
+[0;32mI (15648) asic: Setting Frequency to 368.75MHz (368.75) (error: 0.00MHZ)[0m
+[0;32mI (15748) asic: Setting Frequency to 375.00MHz (375.00) (error: 0.00MHZ)[0m
+[0;32mI (15848) asic: Setting Frequency to 381.25MHz (381.25) (error: 0.00MHZ)[0m
+[0;32mI (15948) asic: Setting Frequency to 387.50MHz (387.50) (error: 0.00MHZ)[0m
+[0;32mI (16048) asic: Setting Frequency to 393.75MHz (393.75) (error: 0.00MHZ)[0m
+[0;32mI (16148) asic: Setting Frequency to 400.00MHz (400.00) (error: 0.00MHZ)[0m
+[0;32mI (16248) asic: Setting Frequency to 406.25MHz (406.25) (error: 0.00MHZ)[0m
+[0;32mI (16348) asic: Setting Frequency to 412.50MHz (412.50) (error: 0.00MHZ)[0m
+[0;32mI (16448) asic: Setting Frequency to 418.75MHz (418.75) (error: 0.00MHZ)[0m
+[0;32mI (16548) asic: Setting Frequency to 425.00MHz (425.00) (error: 0.00MHZ)[0m
+[0;32mI (16648) asic: Setting Frequency to 431.25MHz (431.25) (error: 0.00MHZ)[0m
+[0;32mI (16748) asic: Setting Frequency to 437.50MHz (437.50) (error: 0.00MHZ)[0m
+[0;32mI (16848) asic: Setting Frequency to 443.75MHz (443.75) (error: 0.00MHZ)[0m
+[0;32mI (16948) asic: Setting Frequency to 450.00MHz (450.00) (error: 0.00MHZ)[0m
+[0;32mI (17048) asic: Setting Frequency to 456.25MHz (456.25) (error: 0.00MHZ)[0m
+[0;32mI (17148) asic: Setting Frequency to 462.50MHz (462.50) (error: 0.00MHZ)[0m
+[0;32mI (17248) asic: Setting Frequency to 468.75MHz (468.75) (error: 0.00MHZ)[0m
+[0;32mI (17348) asic: Setting Frequency to 475.00MHz (475.00) (error: 0.00MHZ)[0m
+[0;32mI (17448) asic: Setting Frequency to 481.25MHz (481.25) (error: 0.00MHZ)[0m
+[0;32mI (17548) asic: Setting Frequency to 487.50MHz (487.50) (error: 0.00MHZ)[0m
+[0;32mI (17648) asic: Setting Frequency to 493.75MHz (493.75) (error: 0.00MHZ)[0m
+[0;32mI (17748) asic: Setting Frequency to 500.00MHz (500.00) (error: 0.00MHZ)[0m
+[0;32mI (17848) asic: Setting Frequency to 506.25MHz (506.25) (error: 0.00MHZ)[0m
+[0;32mI (17948) asic: Setting Frequency to 512.50MHz (512.50) (error: 0.00MHZ)[0m
+[0;32mI (18048) asic: Setting Frequency to 518.75MHz (518.75) (error: 0.00MHZ)[0m
+[0;32mI (18148) asic: Setting Frequency to 525.00MHz (525.00) (error: 0.00MHZ)[0m
+[0;32mI (18248) asic: Setting Frequency to 531.25MHz (531.25) (error: 0.00MHZ)[0m
+[0;32mI (18348) asic: Setting Frequency to 537.50MHz (537.50) (error: 0.00MHZ)[0m
+[0;32mI (18448) asic: Setting Frequency to 543.75MHz (543.75) (error: 0.00MHZ)[0m
+[0;32mI (18548) asic: Setting Frequency to 550.00MHz (550.00) (error: 0.00MHZ)[0m
+[0;32mI (18648) asic: Setting Frequency to 556.25MHz (556.25) (error: 0.00MHZ)[0m
+[0;32mI (18748) asic: Setting Frequency to 562.50MHz (562.50) (error: 0.00MHZ)[0m
+[0;32mI (18848) asic: Setting Frequency to 568.75MHz (568.75) (error: 0.00MHZ)[0m
+[0;32mI (18948) asic: Setting Frequency to 575.00MHz (575.00) (error: 0.00MHZ)[0m
+[0;32mI (19048) asic: Setting Frequency to 581.25MHz (581.25) (error: 0.00MHZ)[0m
+[0;32mI (19148) asic: Setting Frequency to 587.50MHz (587.50) (error: 0.00MHZ)[0m
+[0;32mI (19248) asic: Setting Frequency to 593.75MHz (593.75) (error: 0.00MHZ)[0m
+[0;32mI (19348) asic: Setting Frequency to 600.00MHz (600.00) (error: 0.00MHZ)[0m
+[0;32mI (19448) asic: Setting Frequency to 600.00MHz (600.00) (error: 0.00MHZ)[0m
+[0;32mI (19448) asic: setting 0x10 to 00001eb5[0m
+[0;32mI (19448) asic: Setting max baud of 1000000 [0m
+[0;32mI (19948) serial: Changing UART baud to 1000000[0m
+[0;32mI (20448) nerdqaxe+: Set ASIC voltage = 1.200V[0m
+[0;32mI (20448) TPS53647.c: Vout changed to 1.20 V[0m
+[0;32mI (20448) create_jobs_task: ASIC Job Interval: 500 ms[0m
+[0;32mI (20448) power_management: setting new vcore voltage to 1200mV[0m
+[0;32mI (20448) create_jobs_task: ASIC Ready![0m
+[0;32mI (20458) nerdqaxe+: Set ASIC voltage = 1.200V[0m
+[0;32mI (20448) APIsFetcher: APIs Fetcher started...[0m
+[0;32mI (20468) TPS53647.c: Vout changed to 1.20 V[0m
+[0;32mI (20448) StratumManager: Subscribing to task watchdog.[0m
+[0;32mI (20478) power_management: setting new asic frequency to 600MHz[0m
+[0;32mI (20478) StratumManager: Failover mode enabled[0m
+[0;32mI (20488) asic: Setting Frequency to 600.00MHz (600.00) (error: 0.00MHZ)[0m
+[0;32mI (20448) influx_task: InfluxDB is not enabled.[0m
+[0;32mI (20498) asic: setting 0x10 to 00001eb5[0m
+[0;32mI (20508) power_management: setting version rolling frequency to 25011Hz[0m
+[0;32mI (20448) hashrate_monitor: started (period=5000ms)[0m
+[0;32mI (20518) power_management: PID settings change detected[0m
+[0;32mI (20508) influx_task: halting influx_task[0m
+[0;32mI (20528) power_management: temp: 55.00 p:6.00 i:0.10 d:10.00[0m
+[0;32mI (20448) http_ota: OTA task started...[0m
+[0;32mI (20548) TPS53647.c: TPS536X7_status  bytes: 00, word: 0000, vout: 00, iout: 00, input: 00, mfr_spec: 00[0m
+[0;32mI (20558) TPS53647.c: PMBUS_READ_IIN raw: 0xcad0, decoded: 5.625 A[0m
+[0;32mI (20558) TPS53647.c: PMBUS_READ_PIN raw: 0xea4c, decoded: 73.500 W[0m
+[0;32mI (20568) nerdqaxe+: tmp1075 vs tps: 31.94 vs 35.12 (diff: 3.19)[0m
+[0;32mI (20578) power_management: vin: 12.66, iin: 5.62, pin: 73.50, vout: 1.20, iout: 53.56, pout: 63.94, vr-temp: 31.94[0m
+[0;32mI (20588) emc2302: fan speed: 2927RPM[0m
+[0;32mI (20588) emc2302: fan speed: 3220RPM[0m
+[0;32mI (20598) power_management: Temperature 0: 43.69 C[0m
+[0;32mI (20598) emc2302: setting fan 0 speed to 100.00% (0xff)[0m
+[0;32mI (20608) emc2302: setting fan 1 speed to 100.00% (0xff)[0m
+[0;32mI (20748) esp-x509-crt-bundle: Certificate validated[0m
+[0;32mI (21118) APIsFetcher: HTTP Status = 200, Content-Length = 108[0m
+[0;32mI (21118) APIsFetcher: Received JSON: {"time":1767049503,"USD":87252,"EUR":74117,"GBP":64520,"CAD":119456,"CHF":68794,"AUD":130399,"JPY":13617415}[0m
+[0;32mI (21128) APIsFetcher: Bitcoin price in USD: 87252[0m
+[0;32mI (21408) esp-x509-crt-bundle: Certificate validated[0m
+[0;32mI (21608) TPS53647.c: PMBUS_READ_IIN raw: 0xcae6, decoded: 5.797 A[0m
+[0;32mI (21608) TPS53647.c: PMBUS_READ_PIN raw: 0xea4d, decoded: 73.625 W[0m
+[0;32mI (21618) nerdqaxe+: tmp1075 vs tps: 32.31 vs 36.38 (diff: 4.06)[0m
+[0;32mI (21618) power_management: vin: 12.77, iin: 5.80, pin: 73.62, vout: 1.20, iout: 53.56, pout: 64.25, vr-temp: 32.31[0m
+[0;32mI (21638) emc2302: fan speed: 2932RPM[0m
+[0;32mI (21638) emc2302: fan speed: 3236RPM[0m
+[0;32mI (21638) power_management: Temperature 0: 44.12 C[0m
+[0;32mI (21648) emc2302: setting fan 0 speed to 100.00% (0xff)[0m
+[0;32mI (21648) emc2302: setting fan 1 speed to 100.00% (0xff)[0m
+[0;32mI (21788) APIsFetcher: HTTP Status = 200, Content-Length = 6[0m
+[0;32mI (21798) APIsFetcher: Received JSON: 930083[0m
+[0;32mI (21798) APIsFetcher: Current block: 930083[0m
+[0;32mI (22058) esp-x509-crt-bundle: Certificate validated[0m
+[0;32mI (22428) APIsFetcher: HTTP Status = 200, Content-Length = 293[0m
+[0;32mI (22438) APIsFetcher: Received JSON: {"hashrates":[{"timestamp":1766793600,"avgHashrate":1.157637515718899e+21},{"timestamp":1766880000,"avgHashrate":994092685617678000000},{"timestamp":1766966400,"avgHashrate":1.1490250222081779e+21}],"difficulty":[],"currentHashrate":1.098808545239319e+21,"currentDifficulty":148258433855481.3}[0m
+[0;32mI (22458) APIsFetcher: Network hash: 1098 EH/s[0m
+[0;32mI (22458) APIsFetcher: Network difficulty: 148 T[0m
+[0;32mI (22748) esp-x509-crt-bundle: Certificate validated[0m
+[0;32mI (23108) APIsFetcher: HTTP Status = 200, Content-Length = 74[0m
+[0;32mI (23108) APIsFetcher: Received JSON: {"fastestFee":1,"halfHourFee":1,"hourFee":1,"economyFee":1,"minimumFee":1}[0m
+[0;32mI (23118) APIsFetcher: Network fees: 1, 1, 1[0m
+[0;32mI (23608) TPS53647.c: PMBUS_READ_IIN raw: 0xcae6, decoded: 5.797 A[0m
+[0;32mI (23608) TPS53647.c: PMBUS_READ_PIN raw: 0xea4e, decoded: 73.750 W[0m
+[0;32mI (23608) nerdqaxe+: tmp1075 vs tps: 32.69 vs 36.75 (diff: 4.06)[0m
+[0;32mI (23618) power_management: vin: 12.78, iin: 5.80, pin: 73.75, vout: 1.20, iout: 53.56, pout: 64.38, vr-temp: 32.69[0m
+[0;32mI (23628) emc2302: fan speed: 2882RPM[0m
+[0;32mI (23628) emc2302: fan speed: 3204RPM[0m
+[0;32mI (23638) power_management: Temperature 0: 44.62 C[0m
+[0;32mI (23638) emc2302: setting fan 0 speed to 100.00% (0xff)[0m
+[0;32mI (23648) emc2302: setting fan 1 speed to 100.00% (0xff)[0m
+[0;32mI (24948) hashrate_monitor: chip hashrates: 0.00GH/s / 0.00GH/s / 0.00GH/s / 0.00GH/s  (total: 0.000GH/s)[0m
+[0;32mI (25608) TPS53647.c: PMBUS_READ_IIN raw: 0xcae6, decoded: 5.797 A[0m
+[0;32mI (25608) TPS53647.c: PMBUS_READ_PIN raw: 0xea4e, decoded: 73.750 W[0m
+[0;32mI (25608) nerdqaxe+: tmp1075 vs tps: 33.06 vs 37.62 (diff: 4.56)[0m
+[0;32mI (25618) power_management: vin: 12.77, iin: 5.80, pin: 73.75, vout: 1.20, iout: 53.56, pout: 63.81, vr-temp: 33.06[0m
+[0;32mI (25628) emc2302: fan speed: 2895RPM[0m
+[0;32mI (25628) emc2302: fan speed: 3186RPM[0m
+[0;32mI (25638) power_management: Temperature 0: 44.94 C[0m
+[0;32mI (25638) emc2302: setting fan 0 speed to 100.00% (0xff)[0m
+[0;32mI (25648) emc2302: setting fan 1 speed to 100.00% (0xff)[0m
+[0;32mI (27608) TPS53647.c: PMBUS_READ_IIN raw: 0xcae6, decoded: 5.797 A[0m
+[0;32mI (27608) TPS53647.c: PMBUS_READ_PIN raw: 0xea4d, decoded: 73.625 W[0m
+[0;32mI (27608) nerdqaxe+: tmp1075 vs tps: 33.31 vs 37.88 (diff: 4.56)[0m
+[0;32mI (27618) power_management: vin: 12.75, iin: 5.80, pin: 73.62, vout: 1.20, iout: 53.75, pout: 64.62, vr-temp: 33.31[0m
+[0;32mI (27628) emc2302: fan speed: 2901RPM[0m
+[0;32mI (27628) emc2302: fan speed: 3207RPM[0m
+[0;32mI (27638) power_management: Temperature 0: 45.19 C[0m
+[0;32mI (27638) emc2302: setting fan 0 speed to 100.00% (0xff)[0m
+[0;32mI (27648) emc2302: setting fan 1 speed to 100.00% (0xff)[0m
+[0;32mI (29608) TPS53647.c: PMBUS_READ_IIN raw: 0xcae6, decoded: 5.797 A[0m
+[0;32mI (29608) TPS53647.c: PMBUS_READ_PIN raw: 0xea4f, decoded: 73.875 W[0m
+[0;32mI (29608) nerdqaxe+: tmp1075 vs tps: 33.56 vs 37.62 (diff: 4.06)[0m
+[0;32mI (29618) power_management: vin: 12.69, iin: 5.80, pin: 73.88, vout: 1.20, iout: 53.75, pout: 64.38, vr-temp: 33.56[0m
+[0;32mI (29628) emc2302: fan speed: 2901RPM[0m
+[0;32mI (29628) emc2302: fan speed: 3178RPM[0m
+[0;32mI (29638) power_management: Temperature 0: 45.44 C[0m
+[0;32mI (29638) emc2302: setting fan 0 speed to 100.00% (0xff)[0m
+[0;32mI (29648) emc2302: setting fan 1 speed to 100.00% (0xff)[0m
+[0;32mI (29948) hashrate_monitor: chip hashrates: 0.00GH/s / 0.00GH/s / 0.00GH/s / 0.00GH/s  (total: 0.000GH/s)[0m
+[0;32mI (30498) DNS: Resolved IP: 192.168.5.209[0m
+[0;32mI (30498) stratum task (Pri): Connecting to: stratum+tcp://192.168.5.209:2018 (192.168.5.209)[0m
+[0;32mI (30498) stratum task (Pri): Socket created, connecting to 192.168.5.209:2018[0m
+[0;32mI (30508) stratum task (Pri): Connected to 192.168.5.209:2018[0m
+[0;32mI (30508) stratum task (Pri): Set socket timeout to 30 for recv and write[0m
+[0;32mI (30518) stratum task (Pri): TCP Keepalive enabled: idle=10s, interval=5s, count=3[0m
+[0;32mI (30528) stratum_api: Resetting stratum uid[0m
+[0;32mI (30528) stratum_api: tx: {"id": 1, "method": "mining.subscribe", "params": ["NerdQAxe++/BM1370/TNA-V3.4"]}[0m
+[0;32mI (30548) stratum_api: tx: {"id": 2, "method": "mining.configure", "params": [["version-rolling"], {"version-rolling.mask": "1fffe000"}]}[0m
+[0;32mI (30558) stratum_api: tx: {"id": 3, "method": "mining.authorize", "params": ["bc1qgh6vetvn9y3lthaj3esham3mumpdmvs5cyrt0u.NerdQAxe++", "x"]}[0m
+[0;32mI (30568) stratum_api: tx: {"id": 4, "method": "mining.suggest_difficulty", "params": [7777]}[0m
+[0;32mI (30578) stratum task (Pri): rx: {"id":1,"error":null,"result":[[["mining.notify","0c4c7337"]],"0c4c7337",4]}[0m
+[0;32mI (30588) stratum_api: extranonce_str: 0c4c7337[0m
+[0;32mI (30598) stratum_api: extranonce_2_len: 4[0m
+[0;32mI (30598) stratum task (Pri): Set enonce 0c4c7337 enonce2-len: 4[0m
+[0;32mI (30608) stratum task (Pri): rx: {"id":2,"error":null,"result":{"version-rolling":true,"version-rolling.mask":"1fffe000"}}[0m
+[0;32mI (30618) stratum_api: Set version mask: 1fffe000[0m
+[0;32mI (30618) stratum task (Pri): Set version mask: 1fffe000[0m
+[0;32mI (30628) stratum task (Pri): rx: {"id":3,"error":null,"result":true}[0m
+[0;32mI (30638) stratum task (Pri): setup message accepted[0m
+[0;32mI (30638) stratum task (Pri): rx: {"id":null,"method":"mining.set_difficulty","params":[16384]}[0m
+[0;32mI (30648) stratum task (Pri): Set stratum difficulty: 16384[0m
+[0;32mI (30658) stratum task (Pri): rx: {"id":null,"method":"mining.notify","params":["3a48","fe89e86aa69e0865c1e1ed611f1d57370ab6a02d00007e020000000000000000","02000000010000000000000000000000000000000000000000000000000000000000000000ffffffff230324310e225075626c696320506f6f6c206f6e20556d6272656c22","ffffffff025e00ac120000000016001445f4ccad932923f5dfb28e617eee3be6c2ddb2140000000000000000266a24aa21a9edf1d2b6b3cc11261e227f6d27ebb06b3cf6382c07efb9001c6ca51e2ec7455e1600000000",["5b4a6b4fcbb262383f289258e60f6c2b5289d7244f7e3da8ebccb31dd972721a","c090e56b90a879e8794645c06121789c55d2be2043a6e5fce2edead86f7621ca","f26b3a575838e6f8d5800e98b00131c0e657bec3b062a2d6efc358d53447efa3","6cf731d43beb9c75b50cd4cd169d4e7f1a1f4979b4b469d9bbc3d0a5bbc65494","d74b596ae3da5be5264f29ab2d956292e43a2fec16644b7b45fc31c3c7525f55","cfc388ce7f51d18cc8e774b3aae17aecd154968775849581fdfbd2f276d8eab4","4223c6143436ca9a1b5b5786245d436759f85d840a175c90aa53bbd8a058d41f","55f6d1dd1b1f39d16d74147dc6935819f87770c320a3886ef95e84bc45df98ad","4d1719492bc0710351c92fe4f853a7315e67e11172e7cbe3e2353179c608f2be","0c6c5617963c18ea1e785c88f285cdc9eb7c1fc88d4b83b8e360ba66bc10a486","aab1006fcc04203bd3672b89f860bfae55f37f65c19e1b70b0b5d06dd87ba44b"],"20000000","1701e605","695309e5",false]}[0m
+[0;32mI (30768) stratum_api: mining notify[0m
+[0;32mI (30768) create_jobs_task: (Pri) New Work Received 3a48[0m
+[0;32mI (30768) stratum task (Pri): rx: {"id":null,"method":"mining.set_difficulty","params":[7777]}[0m
+[0;32mI (30788) stratum task (Pri): Set stratum difficulty: 7777[0m
+[0;32mI (31608) TPS53647.c: PMBUS_READ_IIN raw: 0xcae6, decoded: 5.797 A[0m
+[0;32mI (31608) TPS53647.c: PMBUS_READ_PIN raw: 0xea4e, decoded: 73.750 W[0m
+[0;32mI (31608) nerdqaxe+: tmp1075 vs tps: 33.69 vs 38.00 (diff: 4.31)[0m
+[0;32mI (31618) power_management: vin: 12.72, iin: 5.80, pin: 73.75, vout: 1.20, iout: 53.56, pout: 64.12, vr-temp: 33.69[0m
+[0;32mI (31628) emc2302: fan speed: 2912RPM[0m
+[0;32mI (31628) emc2302: fan speed: 3191RPM[0m
+[0;32mI (31638) power_management: Temperature 0: 45.69 C[0m
+[0;32mI (31638) emc2302: setting fan 0 speed to 100.00% (0xff)[0m
+[0;32mI (31648) emc2302: setting fan 1 speed to 100.00% (0xff)[0m
+[0;32mI (33098) asic_result: (Pri) Job ID: 78 AsicNr: 2 Ver: 21C62000 Nonce 2DDA12DE; Extranonce2 00000005 diff 16558.0/16384/0.00[0m
+[0;32mI (33108) history: nonce distribution: 0/0/1/0[0m
+[0;32mI (33108) stratum_api: tx: {"id": 5, "method": "mining.submit", "params": ["bc1qgh6vetvn9y3lthaj3esham3mumpdmvs5cyrt0u.NerdQAxe++", "3a48", "00000005", "695309e5", "2dda12de", "01c62000"]}[0m
+[0;32mI (33138) stratum task (Pri): rx: {"id":5,"error":null,"result":true}[0m
+[0;32mI (33138) stratum task (Pri): setup message accepted[0m
+[0;32mI (33598) asic_result: (Pri) Job ID: 10 AsicNr: 2 Ver: 21B96000 Nonce 441C13A4; Extranonce2 00000006 diff 2244.4/16384/16.6k[0m
+[0;32mI (33598) history: nonce distribution: 0/0/2/0[0m
+[0;32mI (33608) TPS53647.c: PMBUS_READ_IIN raw: 0xcae6, decoded: 5.797 A[0m
+[0;32mI (33608) TPS53647.c: PMBUS_READ_PIN raw: 0xea4f, decoded: 73.875 W[0m
+[0;32mI (33618) nerdqaxe+: tmp1075 vs tps: 33.88 vs 38.25 (diff: 4.38)[0m
+[0;32mI (33628) power_management: vin: 12.78, iin: 5.80, pin: 73.88, vout: 1.20, iout: 53.94, pout: 64.50, vr-temp: 33.88[0m
+[0;32mI (33638) emc2302: fan speed: 2901RPM[0m
+[0;32mI (33638) emc2302: fan speed: 3204RPM[0m
+[0;32mI (33648) power_management: Temperature 0: 45.88 C[0m
+[0;32mI (33648) emc2302: setting fan 0 speed to 100.00% (0xff)[0m
+[0;32mI (33658) emc2302: setting fan 1 speed to 100.00% (0xff)[0m
+[0;32mI (33818) asic_result: (Pri) Job ID: 10 AsicNr: 2 Ver: 2462A000 Nonce 8F111356; Extranonce2 00000006 diff 8773.3/16384/16.6k[0m
+[0;32mI (33818) history: nonce distribution: 0/0/3/0[0m
+[0;32mI (34558) asic_result: (Pri) Job ID: 40 AsicNr: 3 Ver: 21336000 Nonce 26CF1A24; Extranonce2 00000008 diff 3991.1/16384/16.6k[0m
+[0;32mI (34558) history: nonce distribution: 0/0/3/1[0m
+[0;32mI (34948) history: hashrate: 1m:3463.471GH* 10m:3463.471GH* 1h:3463.471GH* 1d:3463.471GH*[0m
+[0;32mI (34948) hashrate_monitor: chip hashrates: 895.07GH/s / 898.51GH/s / 791.13GH/s / 878.75GH/s  (total: 3463.471GH/s)[0m
+[0;32mI (35608) TPS53647.c: TPS536X7_status  bytes: 00, word: 0000, vout: 00, iout: 00, input: 00, mfr_spec: 00[0m
+[0;32mI (35608) TPS53647.c: PMBUS_READ_IIN raw: 0xcae6, decoded: 5.797 A[0m
+[0;32mI (35618) TPS53647.c: PMBUS_READ_PIN raw: 0xea4f, decoded: 73.875 W[0m
+[0;32mI (35628) nerdqaxe+: tmp1075 vs tps: 34.00 vs 38.88 (diff: 4.88)[0m
+[0;32mI (35628) power_management: vin: 12.77, iin: 5.80, pin: 73.88, vout: 1.20, iout: 53.94, pout: 64.38, vr-temp: 34.00[0m
+[0;32mI (35638) emc2302: fan speed: 2945RPM[0m
+[0;32mI (35648) emc2302: fan speed: 3207RPM[0m
+[0;32mI (35648) power_management: Temperature 0: 46.06 C[0m
+[0;32mI (35648) emc2302: setting fan 0 speed to 100.00% (0xff)[0m
+[0;32mI (35658) emc2302: setting fan 1 speed to 100.00% (0xff)[0m
+[0;32mI (35748) asic_result: (Pri) Job ID: 70 AsicNr: 1 Ver: 23840000 Nonce B28C0C0E; Extranonce2 0000000a diff 6761.8/16384/16.6k[0m
+[0;32mI (35748) history: nonce distribution: 0/1/3/1[0m
+[0;32mI (36078) asic_result: (Pri) Job ID: 08 AsicNr: 2 Ver: 216CE000 Nonce 3CC912C2; Extranonce2 0000000b diff 3396.6/16384/16.6k[0m
+[0;32mI (36078) history: nonce distribution: 0/1/4/1[0m
+[0;32mI (37608) TPS53647.c: PMBUS_READ_IIN raw: 0xcae6, decoded: 5.797 A[0m
+[0;32mI (37608) TPS53647.c: PMBUS_READ_PIN raw: 0xea4f, decoded: 73.875 W[0m
+[0;32mI (37608) nerdqaxe+: tmp1075 vs tps: 34.19 vs 38.50 (diff: 4.31)[0m
+[0;32mI (37618) power_management: vin: 12.81, iin: 5.80, pin: 73.88, vout: 1.20, iout: 54.12, pout: 64.12, vr-temp: 34.19[0m
+[0;32mI (37628) emc2302: fan speed: 2932RPM[0m
+[0;32mI (37628) emc2302: fan speed: 3199RPM[0m
+[0;32mI (37638) power_management: Temperature 0: 46.25 C[0m
+[0;32mI (37638) emc2302: setting fan 0 speed to 100.00% (0xff)[0m
+[0;32mI (37648) emc2302: setting fan 1 speed to 100.00% (0xff)[0m
+[0;32mI (38718) http_file: Sending /index.html.gz[0m
+[0;32mI (38728) http_file: File sending complete[0m
+[0;32mI (38868) http_cors: Client IP: 192.168.1.109[0m
+[0;32mI (38868) http_cors: No Origin header found, assuming direct same-client access.[0m
+[0;32mI (38868) http_cors: allowed: both IPs private[0m
+[0;32mI (38878) http_system: cur: 1767049725448[0m
+[0;32mI (38878) WIFI_RSSI: Current RSSI: -56 dBm[0m
+[0;32mI (38888) http_system: Sending networkMode to UI: wifi (raw value: 0)[0m
+[0;32mI (38908) http_cors: Client IP: 192.168.1.109[0m
+[0;32mI (38908) http_cors: No Origin header found, assuming direct same-client access.[0m
+[0;32mI (38908) http_cors: allowed: both IPs private[0m
+[0;32mI (38908) http_system: cur: 1767049725452[0m
+[0;32mI (38918) WIFI_RSSI: Current RSSI: -56 dBm[0m
+[0;32mI (38928) http_system: Sending networkMode to UI: wifi (raw value: 0)[0m
+[0;32mI (39608) TPS53647.c: PMBUS_READ_IIN raw: 0xcae6, decoded: 5.797 A[0m
+[0;32mI (39608) TPS53647.c: PMBUS_READ_PIN raw: 0xea4f, decoded: 73.875 W[0m
+[0;32mI (39608) nerdqaxe+: tmp1075 vs tps: 34.25 vs 38.62 (diff: 4.38)[0m
+[0;32mI (39618) power_management: vin: 12.78, iin: 5.80, pin: 73.88, vout: 1.20, iout: 53.94, pout: 64.50, vr-temp: 34.25[0m
+[0;32mI (39628) emc2302: fan speed: 2912RPM[0m
+[0;32mI (39628) emc2302: fan speed: 3207RPM[0m
+[0;32mI (39638) power_management: Temperature 0: 46.38 C[0m
+[0;32mI (39638) emc2302: setting fan 0 speed to 100.00% (0xff)[0m
+[0;32mI (39648) emc2302: setting fan 1 speed to 100.00% (0xff)[0m
+[0;32mI (39948) history: hashrate: 1m:4093.106GH* 10m:4093.106GH* 1h:4093.106GH* 1d:4093.106GH*[0m
+[0;32mI (39948) hashrate_monitor: chip hashrates: 1225.78GH/s / 1174.24GH/s / 1124.42GH/s / 1198.29GH/s  (total: 4722.741GH/s)[0m
+[0;32mI (40498) ping task (pri): PING 192.168.5.209 (192.168.5.209): 64 data bytes[0m
+[0;32mI (40498) ping task (pri): 64 bytes from 192.168.5.209: icmp_seq=1 ttl=63 time=6 ms[0m
+[0;32mI (40828) http_cors: Client IP: 192.168.1.109[0m
+[0;32mI (40828) http_cors: No Origin header found, assuming direct same-client access.[0m
+[0;32mI (40828) http_cors: allowed: both IPs private[0m
+[0;32mI (40838) http_system: cur: 1767049727382[0m
+[0;32mI (40848) WIFI_RSSI: Current RSSI: -56 dBm[0m
+[0;32mI (40858) http_system: Sending networkMode to UI: wifi (raw value: 0)[0m
+[0;32mI (40868) http_cors: Client IP: 192.168.1.109[0m
+[0;32mI (40868) http_cors: No Origin header found, assuming direct same-client access.[0m
+[0;32mI (40868) http_cors: allowed: both IPs private[0m
+[0;32mI (40888) http_cors: Client IP: 192.168.1.109[0m
+[0;32mI (40888) http_cors: No Origin header found, assuming direct same-client access.[0m
+[0;32mI (40888) http_cors: allowed: both IPs private[0m
+[0;32mI (40898) http_system: cur: 1767049727388[0m
+[0;32mI (40898) WIFI_RSSI: Current RSSI: -56 dBm[0m
+[0;32mI (40908) http_system: Sending networkMode to UI: wifi (raw value: 0)[0m
+[0;32mI (41198) asic_result: (Pri) Job ID: 78 AsicNr: 0 Ver: 22F2C000 Nonce 0B580200; Extranonce2 00000015 diff 8944.6/16384/16.6k[0m
+[0;32mI (41198) history: nonce distribution: 1/1/4/1[0m
+[0;32mI (41518) ping task (pri): 64 bytes from 192.168.5.209: icmp_seq=2 ttl=63 time=25 ms[0m
+[0;32mI (41608) TPS53647.c: PMBUS_READ_IIN raw: 0xcae6, decoded: 5.797 A[0m
+[0;32mI (41608) TPS53647.c: PMBUS_READ_PIN raw: 0xea4f, decoded: 73.875 W[0m
+[0;32mI (41608) nerdqaxe+: tmp1075 vs tps: 34.38 vs 39.50 (diff: 5.12)[0m
+[0;32mI (41618) power_management: vin: 12.75, iin: 5.80, pin: 73.88, vout: 1.20, iout: 54.12, pout: 64.50, vr-temp: 34.38[0m
+[0;32mI (41628) emc2302: fan speed: 2925RPM[0m
+[0;32mI (41628) emc2302: fan speed: 3199RPM[0m
+[0;32mI (41638) power_management: Temperature 0: 46.56 C[0m
+[0;32mI (41638) emc2302: setting fan 0 speed to 100.00% (0xff)[0m
+[0;32mI (41648) emc2302: setting fan 1 speed to 100.00% (0xff)[0m
+[0;32mI (41988) asic_result: (Pri) Job ID: 28 AsicNr: 2 Ver: 20656000 Nonce BECE12F2; Extranonce2 00000017 diff 7456.1/16384/16.6k[0m
+[0;32mI (41988) history: nonce distribution: 1/1/5/1[0m
+[0;32mI (42098) asic_result: (Pri) Job ID: 28 AsicNr: 1 Ver: 21C04000 Nonce B3360D0C; Extranonce2 00000017 diff 4388.4/16384/16.6k[0m
+[0;32mI (42098) history: nonce distribution: 1/2/5/1[0m
+[0;32mI (42498) ping task (pri): 64 bytes from 192.168.5.209: icmp_seq=3 ttl=63 time=2 ms[0m
+[0;32mI (42678) asic_result: (Pri) Job ID: 40 AsicNr: 0 Ver: 22B28000 Nonce 73990212; Extranonce2 00000018 diff 27197.2/16384/16.6k[0m
+[0;32mI (42678) history: nonce distribution: 2/2/5/1[0m
+[0;32mI (42688) stratum_api: tx: {"id": 6, "method": "mining.submit", "params": ["bc1qgh6vetvn9y3lthaj3esham3mumpdmvs5cyrt0u.NerdQAxe++", "3a48", "00000018", "695309e5", "73990212", "02b28000"]}[0m
+[0;32mI (42708) stratum task (Pri): rx: {"id":6,"error":null,"result":true}[0m
+[0;32mI (42708) stratum task (Pri): message result accepted[0m
+[0;32mI (42778) http_cors: Client IP: 192.168.1.109[0m
+[0;32mI (42778) http_cors: Origin header: http://192.168.1.29[0m
+[0;32mI (42778) http_cors: Extracted origin host: 192.168.1.29[0m
+[0;32mI (42788) http_cors: Extracted IP address 486648000[0m
+[0;32mI (42788) http_cors: allowed: both IPs private[0m
+[0;33mW (42808) board: BDOC MODE ENABLED - All frequency and voltage limits bypassed![0m
+[0;33mW (42808) board: BDOC MODE ENABLED - Frequency and voltage limits REMOVED[0m
+[0;32mI (42818) board: ASIC Frequency: 600MHz[0m
+[0;32mI (42818) board: ASIC voltage: 1200mV[0m
+[0;32mI (42818) board: ASIC job interval: 500ms[0m
+[0;32mI (42828) board: invert fan polarity: false[0m
+[0;32mI (42828) board: fan speed: 100%[0m
+[0;32mI (43038) asic_result: (Pri) Job ID: 58 AsicNr: 0 Ver: 2106A000 Nonce 9B430532; Extranonce2 00000019 diff 6717.7/16384/27.2k[0m
+[0;32mI (43048) history: nonce distribution: 3/2/5/1[0m
+[0;32mI (43498) ping task (pri): 64 bytes from 192.168.5.209: icmp_seq=4 ttl=63 time=3 ms[0m
+[0;33mW (43608) power_management: BDOC MODE: Using overheat threshold 75°C[0m
+[0;32mI (43608) TPS53647.c: PMBUS_READ_IIN raw: 0xcae6, decoded: 5.797 A[0m
+[0;32mI (43608) TPS53647.c: PMBUS_READ_PIN raw: 0xea4e, decoded: 73.750 W[0m
+[0;32mI (43618) nerdqaxe+: tmp1075 vs tps: 34.38 vs 38.62 (diff: 4.25)[0m
+[0;32mI (43618) power_management: vin: 12.78, iin: 5.80, pin: 73.75, vout: 1.20, iout: 53.75, pout: 64.38, vr-temp: 34.38[0m
+[0;32mI (43638) emc2302: fan speed: 2908RPM[0m
+[0;32mI (43638) emc2302: fan speed: 3225RPM[0m
+[0;32mI (43638) power_management: Temperature 0: 46.69 C[0m
+[0;32mI (43648) emc2302: setting fan 0 speed to 100.00% (0xff)[0m
+[0;32mI (43648) emc2302: setting fan 1 speed to 100.00% (0xff)[0m
+[0;32mI (43888) asic_result: (Pri) Job ID: 70 AsicNr: 3 Ver: 25508000 Nonce 3FD31882; Extranonce2 0000001a diff 2230.9/16384/27.2k[0m
+[0;32mI (43898) history: nonce distribution: 3/2/5/2[0m
+[0;32mI (44508) ping task (pri): 64 bytes from 192.168.5.209: icmp_seq=5 ttl=63 time=12 ms[0m
+[0;32mI (44948) history: hashrate: 1m:4338.781GH* 10m:4338.781GH* 1h:4338.781GH* 1d:4338.781GH*[0m
+[0;32mI (44948) hashrate_monitor: chip hashrates: 1239.53GH/s / 1243.83GH/s / 1170.81GH/s / 1175.97GH/s  (total: 4830.132GH/s)[0m
+[0;32mI (45498) ping task (pri): 64 bytes from 192.168.5.209: icmp_seq=6 ttl=63 time=3 ms[0m
+[0;33mW (45608) power_management: BDOC MODE: Using overheat threshold 75°C[0m
+[0;32mI (45608) TPS53647.c: PMBUS_READ_IIN raw: 0xcad0, decoded: 5.625 A[0m
+[0;32mI (45608) TPS53647.c: PMBUS_READ_PIN raw: 0xea4f, decoded: 73.875 W[0m
+[0;32mI (45618) nerdqaxe+: tmp1075 vs tps: 34.62 vs 38.88 (diff: 4.25)[0m
+[0;32mI (45618) power_management: vin: 12.81, iin: 5.62, pin: 73.88, vout: 1.20, iout: 53.75, pout: 64.12, vr-temp: 34.62[0m
+[0;32mI (45638) emc2302: fan speed: 2914RPM[0m
+[0;32mI (45638) emc2302: fan speed: 3204RPM[0m
+[0;32mI (45638) power_management: Temperature 0: 46.75 C[0m
+[0;32mI (45648) emc2302: setting fan 0 speed to 100.00% (0xff)[0m
+[0;32mI (45648) emc2302: setting fan 1 speed to 100.00% (0xff)[0m
+[0;32mI (45668) http_cors: Client IP: 192.168.1.109[0m
+[0;32mI (45668) http_cors: No Origin header found, assuming direct same-client access.[0m
+[0;32mI (45668) http_cors: allowed: both IPs private[0m
+[0;32mI (45678) http_system: cur: 1767049732240[0m
+[0;32mI (45688) WIFI_RSSI: Current RSSI: -56 dBm[0m
+[0;32mI (45698) http_system: Sending networkMode to UI: wifi (raw value: 0)[0m
+[0;32mI (45728) http_cors: Client IP: 192.168.1.109[0m
+[0;32mI (45728) http_cors: Origin header: http://192.168.1.29[0m
+[0;32mI (45728) http_cors: Extracted origin host: 192.168.1.29[0m
+[0;32mI (45728) http_cors: Extracted IP address 486648000[0m
+[0;32mI (45738) http_cors: allowed: both IPs private[0m
+[0;32mI (45748) system: stratum_keep updated via WebUI: ENABLED[0m
+[0;33mW (45758) board: BDOC MODE ENABLED - Frequency and voltage limits REMOVED[0m
+[0;32mI (45758) board: ASIC Frequency: 600MHz[0m
+[0;32mI (45758) board: ASIC voltage: 1200mV[0m
+[0;32mI (45768) board: ASIC job interval: 500ms[0m
+[0;32mI (45768) board: invert fan polarity: false[0m
+[0;32mI (45768) board: fan speed: 100%[0m
+[0;32mI (46498) ping task (pri): 64 bytes from 192.168.5.209: icmp_seq=7 ttl=63 time=1 ms[0m
+[0;32mI (46648) ping task (pri): --- 192.168.5.209 ping statistics ---[0m
+[0;32mI (46648) ping task (pri): 7 packets transmitted, 7 packets received, 0.0% packet loss[0m
+[0;32mI (46648) ping task (pri): round-trip min/avg/max = 1.00/7.43/25.00 ms[0m
+[0;32mI (46658) ping task (pri): Recent 15-min packet loss: 0.0%[0m
+[0;32mI (46848) http_cors: Client IP: 192.168.1.109[0m
+[0;32mI (46848) http_cors: No Origin header found, assuming direct same-client access.[0m
+[0;32mI (46858) http_cors: allowed: both IPs private[0m
+[0;32mI (46858) http_system: cur: 1767049733433[0m
+[0;32mI (46868) WIFI_RSSI: Current RSSI: -56 dBm[0m
+[0;32mI (46878) http_system: Sending networkMode to UI: wifi (raw value: 0)[0m
+[0;32mI (46908) http_cors: Client IP: 192.168.1.109[0m
+[0;32mI (46908) http_cors: Origin header: http://192.168.1.29[0m
+[0;32mI (46908) http_cors: Extracted origin host: 192.168.1.29[0m
+[0;32mI (46908) http_cors: Extracted IP address 486648000[0m
+[0;32mI (46918) http_cors: allowed: both IPs private[0m
+[0;32mI (46918) http_restart: Restarting System because of API Request[0m
+[0;32mI (47508) asic_result: (Pri) Job ID: 30 AsicNr: 2 Ver: 20994000 Nonce E1EF144A; Extranonce2 00000022 diff 2193.3/16384/27.2k[0m
+[0;32mI (47508) history: nonce distribution: 3/2/6/2[0m
+[0;33mW (47608) power_management: BDOC MODE: Using overheat threshold 75°C[0m
+[0;32mI (47608) TPS53647.c: PMBUS_READ_IIN raw: 0xcae6, decoded: 5.797 A[0m
+[0;32mI (47608) TPS53647.c: PMBUS_READ_PIN raw: 0xea4f, decoded: 73.875 W[0m
+[0;32mI (47618) nerdqaxe+: tmp1075 vs tps: 34.69 vs 39.12 (diff: 4.44)[0m
+[0;32mI (47618) power_management: vin: 12.72, iin: 5.80, pin: 73.88, vout: 1.20, iout: 53.94, pout: 64.50, vr-temp: 34.69[0m
+[0;32mI (47638) emc2302: fan speed: 2912RPM[0m
+[0;32mI (47638) emc2302: fan speed: 3204RPM[0m
+[0;32mI (47638) power_management: Temperature 0: 46.81 C[0m
+[0;32mI (47648) emc2302: setting fan 0 speed to 100.00% (0xff)[0m
+[0;32mI (47648) emc2302: setting fan 1 speed to 100.00% (0xff)[0m
+[0;33mW (47928) power_management: Shutdown requested ...[0m
+[0;33mW (47928) power_management: HW lock acquired![0m
+[0;33mW (47928) board: BDOC MODE: Accepting voltage 0.000V without validation[0m
+[0;32mI (47928) nerdqaxe+: Set ASIC voltage = 0.000V[0m
+[0;33mW (47958) create_jobs_task: suspended[0m
+[0;32mI (48438) nerdqaxe+: Disable LDOs[0m
+[0;33mW (48938) power_management: restart[0m
+I (48938) wifi:state: run -> init (0x0)
+I (48948) wifi:pm stop, total sleep time: 0 us / 41987338 us
+
+I (48948) wifi:<ba-del>idx:0, tid:0
+I (48948) wifi:<ba-del>idx:1, tid:6
+I (48948) wifi:new:<9,0>, old:<9,2>, ap:<9,2>, sta:<9,2>, prof:1, snd_ch_cfg:0x0
+I (48988) wifi:flush txq
+I (48988) wifi:stop sw txq
+I (48988) wifi:lmac stop hw txq
+ESP-ROM:esp32s3-20210327
+Build:Mar 27 2021
+rst:0xc (RTC_SW_CPU_RST),boot:0x8 (SPI_FAST_FLASH_BOOT)
+Saved PC:0x40375f88
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fce2810,len:0x178c
+load:0x403c8700,len:0x4
+load:0x403c8704,len:0xcb8
+load:0x403cb700,len:0x2db0
+entry 0x403c8914
+[0;32mI (26) boot: ESP-IDF v5.3-369-g466a392a76 2nd stage bootloader[0m
+[0;32mI (26) boot: compile time Jun  8 2025 06:47:05[0m
+[0;32mI (27) boot: Multicore bootloader[0m
+[0;32mI (30) boot: chip revision: v0.2[0m
+[0;32mI (34) boot.esp32s3: Boot SPI Speed : 80MHz[0m
+[0;32mI (39) boot.esp32s3: SPI Mode       : DIO[0m
+[0;32mI (44) boot.esp32s3: SPI Flash Size : 16MB[0m
+[0;32mI (49) boot: Enabling RNG early entropy source...[0m
+[0;32mI (54) boot: Partition Table:[0m
+[0;32mI (58) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (65) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (72) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (80) boot:  2 factory          factory app      00 00 00010000 00400000[0m
+[0;32mI (87) boot:  3 www              Unknown data     01 82 00410000 00300000[0m
+[0;32mI (95) boot:  4 ota_0            OTA app          00 10 00710000 00400000[0m
+[0;32mI (102) boot:  5 ota_1            OTA app          00 11 00b10000 00400000[0m
+[0;32mI (110) boot:  6 otadata          OTA data         01 00 00f10000 00002000[0m
+[0;32mI (117) boot:  7 coredump         Unknown data     01 03 00f12000 00010000[0m
+[0;32mI (125) boot: End of partition table[0m
+[0;32mI (129) esp_image: segment 0: paddr=00710020 vaddr=3c120020 size=1935c8h (1652168) map[0m
+[0;32mI (434) esp_image: segment 1: paddr=008a35f0 vaddr=3fc9f000 size=05764h ( 22372) load[0m
+[0;32mI (439) esp_image: segment 2: paddr=008a8d5c vaddr=40374000 size=072bch ( 29372) load[0m
+[0;32mI (446) esp_image: segment 3: paddr=008b0020 vaddr=42000020 size=112cf4h (1125620) map[0m
+[0;32mI (650) esp_image: segment 4: paddr=009c2d1c vaddr=4037b2bc size=13c8ch ( 81036) load[0m
+[0;32mI (679) boot: Loaded app from partition at offset 0x710000[0m
+[0;32mI (680) boot: Disabling RNG early entropy source...[0m
+[0;32mI (692) octal_psram: vendor id    : 0x0d (AP)[0m
+[0;32mI (692) octal_psram: dev id       : 0x02 (generation 3)[0m
+[0;32mI (692) octal_psram: density      : 0x03 (64 Mbit)[0m
+[0;32mI (697) octal_psram: good-die     : 0x01 (Pass)[0m
+[0;32mI (702) octal_psram: Latency      : 0x01 (Fixed)[0m
+[0;32mI (707) octal_psram: VCC          : 0x01 (3V)[0m
+[0;32mI (712) octal_psram: SRF          : 0x01 (Fast Refresh)[0m
+[0;32mI (718) octal_psram: BurstType    : 0x01 (Hybrid Wrap)[0m
+[0;32mI (724) octal_psram: BurstLen     : 0x01 (32 Byte)[0m
+[0;32mI (730) octal_psram: Readlatency  : 0x02 (10 cycles@Fixed)[0m
+[0;32mI (736) octal_psram: DriveStrength: 0x00 (1/1)[0m
+[0;32mI (741) esp_psram: Found 8MB PSRAM device[0m
+[0;32mI (746) esp_psram: Speed: 40MHz[0m
+[0;32mI (750) cpu_start: Multicore app[0m
+[0;32mI (1484) esp_psram: SPI SRAM memory test OK[0m
+[0;32mI (1494) cpu_start: Pro cpu start user code[0m
+[0;32mI (1494) cpu_start: cpu freq: 240000000 Hz[0m
+[0;32mI (1494) app_init: Application information:[0m
+[0;32mI (1497) app_init: Project name:     esp-miner[0m
+[0;32mI (1502) app_init: App version:      TNA-V3.4[0m
+[0;32mI (1507) app_init: Compile time:     Dec 29 2025 22:52:50[0m
+[0;32mI (1513) app_init: ELF file SHA256:  1e1528e3a...[0m
+[0;32mI (1519) app_init: ESP-IDF:          v5.3.4[0m
+[0;32mI (1523) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (1528) efuse_init: Max chip rev:     v0.99 [0m
+[0;32mI (1533) efuse_init: Chip rev:         v0.2[0m
+[0;32mI (1538) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (1546) heap_init: At 3FCA6740 len 00042FD0 (267 KiB): RAM[0m
+[0;32mI (1552) heap_init: At 3FCE9710 len 00005724 (21 KiB): RAM[0m
+[0;32mI (1558) heap_init: At 3FCF0000 len 00008000 (32 KiB): DRAM[0m
+[0;32mI (1564) heap_init: At 600FE000 len 00001FE8 (7 KiB): RTCRAM[0m
+[0;32mI (1571) esp_psram: Adding pool of 8177K of PSRAM memory to heap allocator[0m
+[0;32mI (1579) spi_flash: detected chip: winbond[0m
+[0;32mI (1583) spi_flash: flash io: dio[0m
+[0;33mW (1587) i2c: This driver is an old driver, please migrate your application code to adapt `driver/i2c_master.h`[0m
+[0;32mI (1598) sleep: Configure to isolate all GPIO pins in sleep state[0m
+[0;32mI (1605) sleep: Enable automatic switching of GPIO sleep configuration[0m
+[0;32mI (1612) main_task: Started on CPU0[0m
+[0;32mI (1622) main_task: Calling app_main()[0m
+[0;32mI (1622) nerd*axe: Welcome to the Nerd*Axe - hack the planet![0m
+[0;32mI (1652) SystemModule: Reset reason: SYSTEM.RESET_SOFTWARE[0m
+[0;32mI (1652) nerd*axe: Starting network setup...[0m
+[0;32mI (1652) wifi station: Initializing network infrastructure (netif + event loop)[0m
+[0;32mI (1662) wifi station: Network infrastructure initialized successfully[0m
+[0;32mI (1672) nerd*axe: Network mode: WiFi[0m
+[0;32mI (1672) pp: pp rom version: e7ae62f[0m
+[0;32mI (1682) net80211: net80211 rom version: e7ae62f[0m
+I (1692) wifi:wifi driver task: 3fcb1470, prio:23, stack:6656, core=0
+I (1702) wifi:wifi firmware version: d2d8792
+I (1702) wifi:wifi certification version: v7.0
+I (1702) wifi:config NVS flash: enabled
+I (1702) wifi:config nano formating: disabled
+I (1702) wifi:Init data frame dynamic rx buffer num: 32
+I (1712) wifi:Init static rx mgmt buffer num: 5
+I (1712) wifi:Init management short buffer num: 32
+I (1722) wifi:Init static tx buffer num: 16
+I (1722) wifi:Init tx cache buffer num: 32
+I (1722) wifi:Init static tx FG buffer num: 2
+I (1732) wifi:Init static rx buffer size: 1600
+I (1732) wifi:Init static rx buffer num: 16
+I (1742) wifi:Init dynamic rx buffer num: 32
+[0;32mI (1742) wifi_init: rx ba win: 16[0m
+[0;32mI (1752) wifi_init: accept mbox: 6[0m
+[0;32mI (1752) wifi_init: tcpip mbox: 32[0m
+[0;32mI (1752) wifi_init: udp mbox: 6[0m
+[0;32mI (1762) wifi_init: tcp mbox: 6[0m
+[0;32mI (1762) wifi_init: tcp tx win: 5760[0m
+[0;32mI (1772) wifi_init: tcp rx win: 5760[0m
+[0;32mI (1772) wifi_init: tcp mss: 1440[0m
+[0;32mI (1772) wifi_init: WiFi/LWIP prefer SPIRAM[0m
+[0;32mI (1782) wifi_init: WiFi IRAM OP enabled[0m
+[0;32mI (1782) wifi_init: WiFi RX IRAM OP enabled[0m
+[0;32mI (1792) wifi station: ESP_WIFI Access Point On[0m
+[0;32mI (1792) wifi station: ESP_WIFI Access Point On[0m
+W (1802) wifi:Affected by the ESP-NOW encrypt num, set the max connection num to 10
+[0;32mI (1812) wifi station: ESP_WIFI_MODE_STA[0m
+[0;32mI (1812) wifi station: wifi_init_sta finished.[0m
+[0;32mI (1822) phy_init: phy_version 701,f4f1da3a,Mar  3 2025,15:50:10[0m
+I (1862) wifi:mode : sta (dc:b4:d9:17:b8:58) + softAP (dc:b4:d9:17:b8:59)
+I (1862) wifi:enable tsf
+I (1862) wifi:Total power save buffer number: 8
+I (1862) wifi:Init max length of beacon: 752/752
+I (1862) wifi:Init max length of beacon: 752/752
+I (1872) wifi:Set ps type: 0, coexist: 0
+
+[0;32mI (1872) esp_netif_lwip: DHCP server started on interface WIFI_AP_DEF with IP: 192.168.4.1[0m
+[0;32mI (1882) wifi station: ESP_WIFI setting hostname to: NerdQAxe++[0m
+[0;32mI (1892) wifi station: wifi_init_sta finished.[0m
+[0;32mI (1892) nerd*axe: W5500 Ethernet hardware marked as available for UI[0m
+[0;32mI (2032) http_file: Partition size: total: 2884241, used: 1053447[0m
+[0;32mI (2032) http_server: Starting HTTP Server[0m
+[0;32mI (2032) example_dns_redirect_server: Socket created[0m
+[0;32mI (2032) example_dns_redirect_server: Socket bound, port 53[0m
+[0;32mI (2042) example_dns_redirect_server: Waiting for data[0m
+I (4702) wifi:ap channel adjust o:1,1 n:9,2
+I (4702) wifi:new:<9,2>, old:<1,1>, ap:<9,2>, sta:<9,2>, prof:1, snd_ch_cfg:0x0
+I (4702) wifi:state: init -> auth (0xb0)
+I (5232) wifi:state: auth -> assoc (0x0)
+I (5252) wifi:state: assoc -> run (0x10)
+I (5282) wifi:connected with Dinky, aid = 1, channel 9, 40D, bssid = 9a:2a:6f:ee:44:9d
+I (5282) wifi:security: WPA3-SAE, phy: bgn, rssi: -56
+I (5292) wifi:pm start, type: 0
+
+I (5292) wifi:dp: 1, bi: 102400, li: 3, scale listen interval from 307200 us to 307200 us
+I (5302) wifi:set rx beacon pti, rx_bcn_pti: 0, bcn_timeout: 25000, mt_pti: 0, mt_time: 10000
+E (5312) wifi:sta is connecting, cannot set config
+I (5312) wifi:<ba-add>idx:0 (ifx:0, 9a:2a:6f:ee:44:9d), tid:0, ssn:0, winSize:64
+I (5322) wifi:AP's beacon interval = 102400 us, DTIM period = 1
+[0;32mI (6322) wifi station: Device ip: 192.168.1.29[0m
+[0;32mI (6322) esp_netif_handlers: sta ip: 192.168.1.29, mask: 255.255.255.0, gw: 192.168.1.1[0m
+[0;32mI (6322) nerd*axe: Connected to SSID: Dinky[0m
+[0;33mW (6322) board: BDOC MODE ENABLED - Frequency and voltage limits REMOVED[0m
+[0;32mI (6332) board: ASIC Frequency: 600MHz[0m
+[0;32mI (6342) board: ASIC voltage: 1200mV[0m
+[0;32mI (6342) board: ASIC job interval: 500ms[0m
+[0;32mI (6342) board: invert fan polarity: false[0m
+[0;32mI (6352) board: fan speed: 100%[0m
+[0;32mI (6352) serial: Initializing serial[0m
+[0;32mI (6362) nerdqaxe+: found asic temp sensor 0[0m
+[0;32mI (6362) TMP1075.c: Failed to read temperature from TMP1075[0m
+[0;32mI (6372) nerdqaxe+: found 1 ASIC temp measuring sensors[0m
+[0;32mI (6372) emc2302: initializing EMC2302[0m
+[0;32mI (6382) emc2302: setting fan 0 speed to 10000.00% (0xff)[0m
+[0;32mI (6392) emc2302: setting fan 1 speed to 10000.00% (0xff)[0m
+[0;32mI (6392) emc2302: setting fan 0 speed to 10000.00% (0xff)[0m
+[0;32mI (6402) emc2302: setting fan 1 speed to 10000.00% (0xff)[0m
+[0;32mI (6402) nerd*axe: PSRAM found with 8MB[0m
+[0;32mI (6412) nerd*axe: Found Device Model: NerdQAxe++[0m
+[0;32mI (6412) nerd*axe: Found Board Version: 501[0m
+[0;32mI (6422) TDisplayS3: Screen on[0m
+[0;32mI (6422) INFO: Setting Up TDisplayS3 Screen[0m
+[0;32mI (6432) TDisplayS3: Turn off LCD backlight[0m
+[0;32mI (6432) gpio: GPIO[38]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 [0m
+[0;32mI (6442) TDisplayS3: Initialize Intel 8080 bus[0m
+[0;32mI (6452) TDisplayS3: Install LCD driver of st7789[0m
+[0;32mI (6452) gpio: GPIO[5]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 [0m
+[0;32mI (6472) time: SNTP started[0m
+[0;33mW (6472) board: BDOC MODE: Accepting voltage 0.000V without validation[0m
+[0;32mI (6472) nerdqaxe+: Set ASIC voltage = 0.000V[0m
+[0;32mI (6482) nerdqaxe+: Disable LDOs[0m
+[0;32mI (6582) TDisplayS3: Turn on LCD backlight[0m
+[0;32mI (6582) TDisplayS3: Initialize LVGL library[0m
+[0;32mI (6582) TDisplayS3: Register display driver to LVGL[0m
+[0;32mI (6582) TDisplayS3: Install LVGL tick timer[0m
+[0;32mI (6582) TDisplayS3: Display LVGL animation[0m
+[0;32mI (6622) TDisplayS3: enter state splash1[0m
+[0;32mI (6692) history: History size 32768 samples[0m
+[0;32mI (6702) SystemModule: SYSTEM_task started[0m
+[0;32mI (6732) nerdqaxe+: Enabled LDOs[0m
+[0;33mW (6832) nerdqaxe+: BDOC MODE: Current protection DISABLED (set to 1000A)[0m
+[0;32mI (6832) TPS53647.c: Initializing the core voltage regulator[0m
+[0;32mI (6832) TPS53647.c: Device Code: 01f0[0m
+[0;32mI (6832) TPS53647.c: found TPS53647 controller[0m
+[0;33mW (6842) TPS53647.c: imax=1000 exceeds register limit, clamped to 255[0m
+[0;33mW (6852) TPS53647.c: Per-phase current limit set to maximum (0xFF)[0m
+[0;32mI (6852) TPS53647.c: setting 3 phases[0m
+[0;33mW (6862) board: BDOC MODE: Accepting voltage 1.200V without validation[0m
+[0;32mI (6862) nerdqaxe+: Set ASIC voltage = 1.200V[0m
+[0;32mI (6872) TPS53647.c: Vout changed to 1.20 V[0m
+I (7122) wifi:<ba-add>idx:1 (ifx:0, 9a:2a:6f:ee:44:9d), tid:6, ssn:2, winSize:64
+[0;32mI (7232) http_cors: Client IP: 192.168.1.109[0m
+[0;32mI (7242) http_cors: No Origin header found, assuming direct same-client access.[0m
+[0;32mI (7242) http_cors: allowed: both IPs private[0m
+[0;32mI (7242) http_system: cur: 1767049742685[0m
+[0;32mI (7252) WIFI_RSSI: Current RSSI: -56 dBm[0m
+[0;33mW (7262) history: Invalid history indices or history not (yet) available[0m
+[0;32mI (7262) http_system: Sending networkMode to UI: wifi (raw value: 0)[0m
+[0;32mI (7622) asic: found asic #1[0m
+[0;32mI (7632) asic: found asic #2[0m
+[0;32mI (7632) asic: found asic #3[0m
+[0;32mI (7632) asic: found asic #4[0m
+[0;32mI (8632) bm1370Module: 4 chip(s) detected on the chain, expected 4[0m
+[0;32mI (8632) asic: Setting ASIC difficulty mask to 2047[0m
+[0;32mI (8632) asic: Setting Frequency to 62.50MHz (62.50) (error: 0.00MHZ)[0m
+[0;32mI (8732) asic: Setting Frequency to 68.75MHz (68.75) (error: 0.00MHZ)[0m
+[0;32mI (8832) asic: Setting Frequency to 75.00MHz (75.00) (error: 0.00MHZ)[0m
+[0;32mI (8932) asic: Setting Frequency to 81.25MHz (81.25) (error: 0.00MHZ)[0m
+[0;32mI (9032) asic: Setting Frequency to 87.50MHz (87.50) (error: 0.00MHZ)[0m
+[0;32mI (9132) asic: Setting Frequency to 93.75MHz (93.75) (error: 0.00MHZ)[0m
+[0;32mI (9232) asic: Setting Frequency to 100.00MHz (100.00) (error: 0.00MHZ)[0m
+[0;32mI (9332) asic: Setting Frequency to 106.25MHz (106.25) (error: 0.00MHZ)[0m
+[0;32mI (9432) asic: Setting Frequency to 112.50MHz (112.50) (error: 0.00MHZ)[0m
+[0;32mI (9532) asic: Setting Frequency to 118.75MHz (118.75) (error: 0.00MHZ)[0m
+[0;32mI (9632) asic: Setting Frequency to 125.00MHz (125.00) (error: 0.00MHZ)[0m
+[0;32mI (9682) TDisplayS3: enter state splash2[0m
+[0;32mI (9732) asic: Setting Frequency to 131.25MHz (131.25) (error: 0.00MHZ)[0m
+[0;32mI (9832) asic: Setting Frequency to 137.50MHz (137.50) (error: 0.00MHZ)[0m
+[0;32mI (9932) asic: Setting Frequency to 143.75MHz (143.75) (error: 0.00MHZ)[0m
+[0;32mI (10032) asic: Setting Frequency to 150.00MHz (150.00) (error: 0.00MHZ)[0m
+[0;32mI (10132) asic: Setting Frequency to 156.25MHz (156.25) (error: 0.00MHZ)[0m
+[0;32mI (10232) asic: Setting Frequency to 162.50MHz (162.50) (error: 0.00MHZ)[0m
+[0;32mI (10332) asic: Setting Frequency to 168.75MHz (168.75) (error: 0.00MHZ)[0m
+[0;32mI (10332) time: Time synchronized[0m
+[0;32mI (10432) asic: Setting Frequency to 175.00MHz (175.00) (error: 0.00MHZ)[0m
+[0;32mI (10532) asic: Setting Frequency to 181.25MHz (181.25) (error: 0.00MHZ)[0m
+[0;32mI (10632) asic: Setting Frequency to 187.50MHz (187.50) (error: 0.00MHZ)[0m
+[0;32mI (10732) asic: Setting Frequency to 193.75MHz (193.75) (error: 0.00MHZ)[0m
+[0;32mI (10832) asic: Setting Frequency to 200.00MHz (200.00) (error: 0.00MHZ)[0m
+[0;32mI (10932) asic: Setting Frequency to 206.25MHz (206.25) (error: 0.00MHZ)[0m
+[0;32mI (11032) asic: Setting Frequency to 212.50MHz (212.50) (error: 0.00MHZ)[0m
+[0;32mI (11132) asic: Setting Frequency to 218.75MHz (218.75) (error: 0.00MHZ)[0m
+[0;32mI (11232) asic: Setting Frequency to 225.00MHz (225.00) (error: 0.00MHZ)[0m
+[0;32mI (11332) asic: Setting Frequency to 231.25MHz (231.25) (error: 0.00MHZ)[0m
+[0;32mI (11432) asic: Setting Frequency to 237.50MHz (237.50) (error: 0.00MHZ)[0m
+[0;32mI (11532) asic: Setting Frequency to 243.75MHz (243.75) (error: 0.00MHZ)[0m
+[0;32mI (11632) asic: Setting Frequency to 250.00MHz (250.00) (error: 0.00MHZ)[0m
+[0;32mI (11732) asic: Setting Frequency to 256.25MHz (256.25) (error: 0.00MHZ)[0m
+[0;32mI (11832) asic: Setting Frequency to 262.50MHz (262.50) (error: 0.00MHZ)[0m
+[0;32mI (11932) asic: Setting Frequency to 268.75MHz (268.75) (error: 0.00MHZ)[0m
+[0;32mI (12032) asic: Setting Frequency to 275.00MHz (275.00) (error: 0.00MHZ)[0m
+[0;32mI (12122) http_cors: Client IP: 192.168.1.109[0m
+[0;32mI (12122) http_cors: No Origin header found, assuming direct same-client access.[0m
+[0;32mI (12122) http_cors: allowed: both IPs private[0m
+[0;32mI (12132) asic: Setting Frequency to 281.25MHz (281.25) (error: 0.00MHZ)[0m
+[0;32mI (12142) http_system: cur: 1767049747689[0m
+[0;32mI (12142) WIFI_RSSI: Current RSSI: -55 dBm[0m
+[0;33mW (12152) history: Invalid history indices or history not (yet) available[0m
+[0;32mI (12162) http_system: Sending networkMode to UI: wifi (raw value: 0)[0m
+[0;32mI (12242) asic: Setting Frequency to 287.50MHz (287.50) (error: 0.00MHZ)[0m
+[0;32mI (12342) asic: Setting Frequency to 293.75MHz (294.64) (error: 0.89MHZ)[0m
+[0;32mI (12442) asic: Setting Frequency to 300.00MHz (300.00) (error: 0.00MHZ)[0m
+[0;32mI (12542) asic: Setting Frequency to 306.25MHz (307.14) (error: 0.89MHZ)[0m
+[0;32mI (12642) asic: Setting Frequency to 312.50MHz (312.50) (error: 0.00MHZ)[0m
+[0;32mI (12732) TDisplayS3: enter state wait[0m
+[0;32mI (12742) asic: Setting Frequency to 318.75MHz (319.64) (error: 0.89MHZ)[0m
+[0;32mI (12802) TDisplayS3: enter state mining[0m
+[0;32mI (12802) SystemModule: WiFi IP address: 192.168.1.29[0m
+[0;32mI (12842) asic: Setting Frequency to 325.00MHz (325.00) (error: 0.00MHZ)[0m
+[0;32mI (12942) asic: Setting Frequency to 331.25MHz (332.14) (error: 0.89MHZ)[0m
+[0;32mI (13042) asic: Setting Frequency to 337.50MHz (337.50) (error: 0.00MHZ)[0m
+[0;32mI (13142) asic: Setting Frequency to 343.75MHz (343.75) (error: 0.00MHZ)[0m
+[0;32mI (13242) asic: Setting Frequency to 350.00MHz (350.00) (error: 0.00MHZ)[0m
+[0;32mI (13342) asic: Setting Frequency to 356.25MHz (356.25) (error: 0.00MHZ)[0m
+[0;32mI (13442) asic: Setting Frequency to 362.50MHz (362.50) (error: 0.00MHZ)[0m
+[0;32mI (13542) asic: Setting Frequency to 368.75MHz (368.75) (error: 0.00MHZ)[0m
+[0;32mI (13642) asic: Setting Frequency to 375.00MHz (375.00) (error: 0.00MHZ)[0m
+[0;32mI (13742) asic: Setting Frequency to 381.25MHz (381.25) (error: 0.00MHZ)[0m
+[0;32mI (13842) asic: Setting Frequency to 387.50MHz (387.50) (error: 0.00MHZ)[0m
+[0;32mI (13942) asic: Setting Frequency to 393.75MHz (393.75) (error: 0.00MHZ)[0m
+[0;32mI (14042) asic: Setting Frequency to 400.00MHz (400.00) (error: 0.00MHZ)[0m
+[0;32mI (14142) asic: Setting Frequency to 406.25MHz (406.25) (error: 0.00MHZ)[0m
+[0;32mI (14242) asic: Setting Frequency to 412.50MHz (412.50) (error: 0.00MHZ)[0m
+[0;32mI (14342) asic: Setting Frequency to 418.75MHz (418.75) (error: 0.00MHZ)[0m
+[0;32mI (14442) asic: Setting Frequency to 425.00MHz (425.00) (error: 0.00MHZ)[0m
+[0;32mI (14542) asic: Setting Frequency to 431.25MHz (431.25) (error: 0.00MHZ)[0m
+[0;32mI (14642) asic: Setting Frequency to 437.50MHz (437.50) (error: 0.00MHZ)[0m
+[0;32mI (14742) asic: Setting Frequency to 443.75MHz (443.75) (error: 0.00MHZ)[0m
+[0;32mI (14842) asic: Setting Frequency to 450.00MHz (450.00) (error: 0.00MHZ)[0m
+[0;32mI (14942) asic: Setting Frequency to 456.25MHz (456.25) (error: 0.00MHZ)[0m
+[0;32mI (15042) asic: Setting Frequency to 462.50MHz (462.50) (error: 0.00MHZ)[0m
+[0;32mI (15142) asic: Setting Frequency to 468.75MHz (468.75) (error: 0.00MHZ)[0m
+[0;32mI (15242) asic: Setting Frequency to 475.00MHz (475.00) (error: 0.00MHZ)[0m
+[0;32mI (15342) asic: Setting Frequency to 481.25MHz (481.25) (error: 0.00MHZ)[0m
+[0;32mI (15442) asic: Setting Frequency to 487.50MHz (487.50) (error: 0.00MHZ)[0m
+[0;32mI (15542) asic: Setting Frequency to 493.75MHz (493.75) (error: 0.00MHZ)[0m
+[0;32mI (15642) asic: Setting Frequency to 500.00MHz (500.00) (error: 0.00MHZ)[0m
+[0;32mI (15742) asic: Setting Frequency to 506.25MHz (506.25) (error: 0.00MHZ)[0m
+[0;32mI (15842) asic: Setting Frequency to 512.50MHz (512.50) (error: 0.00MHZ)[0m
+[0;32mI (15942) asic: Setting Frequency to 518.75MHz (518.75) (error: 0.00MHZ)[0m
+[0;32mI (16042) asic: Setting Frequency to 525.00MHz (525.00) (error: 0.00MHZ)[0m
+[0;32mI (16142) asic: Setting Frequency to 531.25MHz (531.25) (error: 0.00MHZ)[0m
+[0;32mI (16242) asic: Setting Frequency to 537.50MHz (537.50) (error: 0.00MHZ)[0m
+[0;32mI (16342) asic: Setting Frequency to 543.75MHz (543.75) (error: 0.00MHZ)[0m
+[0;32mI (16442) asic: Setting Frequency to 550.00MHz (550.00) (error: 0.00MHZ)[0m
+[0;32mI (16542) asic: Setting Frequency to 556.25MHz (556.25) (error: 0.00MHZ)[0m
+[0;32mI (16642) asic: Setting Frequency to 562.50MHz (562.50) (error: 0.00MHZ)[0m
+[0;32mI (16742) asic: Setting Frequency to 568.75MHz (568.75) (error: 0.00MHZ)[0m
+[0;32mI (16842) asic: Setting Frequency to 575.00MHz (575.00) (error: 0.00MHZ)[0m
+[0;32mI (16942) asic: Setting Frequency to 581.25MHz (581.25) (error: 0.00MHZ)[0m
+[0;32mI (17042) asic: Setting Frequency to 587.50MHz (587.50) (error: 0.00MHZ)[0m
+[0;32mI (17112) http_cors: Client IP: 192.168.1.109[0m
+[0;32mI (17122) http_cors: No Origin header found, assuming direct same-client access.[0m
+[0;32mI (17122) http_cors: allowed: both IPs private[0m
+[0;32mI (17122) http_system: cur: 1767049752687[0m
+[0;32mI (17132) WIFI_RSSI: Current RSSI: -55 dBm[0m
+[0;32mI (17142) asic: Setting Frequency to 593.75MHz (593.75) (error: 0.00MHZ)[0m
+[0;33mW (17142) history: Invalid history indices or history not (yet) available[0m
+[0;32mI (17152) http_system: Sending networkMode to UI: wifi (raw value: 0)[0m
+[0;32mI (17242) asic: Setting Frequency to 600.00MHz (600.00) (error: 0.00MHZ)[0m
+[0;32mI (17342) asic: Setting Frequency to 600.00MHz (600.00) (error: 0.00MHZ)[0m
+[0;32mI (17342) asic: setting 0x10 to 00001eb5[0m
+[0;32mI (17342) asic: Setting max baud of 1000000 [0m
+[0;32mI (17842) serial: Changing UART baud to 1000000[0m
+[0;33mW (18342) board: BDOC MODE: Accepting voltage 1.200V without validation[0m
+[0;32mI (18342) nerdqaxe+: Set ASIC voltage = 1.200V[0m
+[0;32mI (18342) TPS53647.c: Vout changed to 1.20 V[0m
+[0;33mW (18342) power_management: BDOC MODE: Using overheat threshold 75°C[0m
+[0;32mI (18352) power_management: setting new vcore voltage to 1200mV[0m
+[0;33mW (18362) board: BDOC MODE: Accepting voltage 1.200V without validation[0m
+[0;32mI (18362) nerdqaxe+: Set ASIC voltage = 1.200V[0m
+[0;32mI (18372) create_jobs_task: ASIC Job Interval: 500 ms[0m
+[0;32mI (18372) create_jobs_task: ASIC Ready![0m
+[0;32mI (18382) TPS53647.c: Vout changed to 1.20 V[0m
+[0;32mI (18382) power_management: setting new asic frequency to 600MHz[0m
+[0;33mW (18392) board: BDOC MODE: Accepting frequency 600.000 MHz without validation[0m
+[0;32mI (18402) asic: Setting Frequency to 600.00MHz (600.00) (error: 0.00MHZ)[0m
+[0;32mI (18412) asic: setting 0x10 to 00001eb5[0m
+[0;32mI (18412) power_management: setting version rolling frequency to 25011Hz[0m
+[0;32mI (18422) power_management: PID settings change detected[0m
+[0;32mI (18422) power_management: temp: 55.00 p:6.00 i:0.10 d:10.00[0m
+[0;32mI (18432) APIsFetcher: APIs Fetcher started...[0m
+[0;32mI (18432) TPS53647.c: TPS536X7_status  bytes: 00, word: 0000, vout: 00, iout: 00, input: 00, mfr_spec: 00[0m
+[0;32mI (18442) influx_task: InfluxDB is not enabled.[0m
+[0;32mI (18452) TPS53647.c: PMBUS_READ_IIN raw: 0xda0d, decoded: 16.406 A[0m
+[0;32mI (18452) StratumManager: Subscribing to task watchdog.[0m
+[0;32mI (18462) TPS53647.c: PMBUS_READ_PIN raw: 0xf340, decoded: 208.000 W[0m
+[0;32mI (18462) StratumManager: Failover mode enabled[0m
+[0;32mI (18472) nerdqaxe+: tmp1075 vs tps: 32.56 vs 37.00 (diff: 4.44)[0m
+[0;32mI (18482) power_management: vin: 12.70, iin: 16.41, pin: 208.00, vout: 1.20, iout: 152.25, pout: 182.75, vr-temp: 32.56[0m
+[0;32mI (18452) hashrate_monitor: started (period=5000ms)[0m
+[0;32mI (18502) emc2302: fan speed: 2914RPM[0m
+[0;32mI (18452) influx_task: halting influx_task[0m
+[0;32mI (18502) emc2302: fan speed: 3199RPM[0m
+[0;32mI (18452) http_ota: OTA task started...[0m
+[0;32mI (18512) power_management: Temperature 0: 44.50 C[0m
+[0;32mI (18522) emc2302: setting fan 0 speed to 100.00% (0xff)[0m
+[0;32mI (18532) emc2302: setting fan 1 speed to 100.00% (0xff)[0m
+[0;32mI (18732) esp-x509-crt-bundle: Certificate validated[0m
+[0;32mI (19102) APIsFetcher: HTTP Status = 200, Content-Length = 108[0m
+[0;32mI (19102) APIsFetcher: Received JSON: {"time":1767049503,"USD":87252,"EUR":74117,"GBP":64520,"CAD":119456,"CHF":68794,"AUD":130399,"JPY":13617415}[0m
+[0;32mI (19112) APIsFetcher: Bitcoin price in USD: 87252[0m
+[0;32mI (19382) esp-x509-crt-bundle: Certificate validated[0m
+[0;33mW (19462) power_management: BDOC MODE: Using overheat threshold 75°C[0m
+[0;32mI (19462) TPS53647.c: PMBUS_READ_IIN raw: 0xda0d, decoded: 16.406 A[0m
+[0;32mI (19472) TPS53647.c: PMBUS_READ_PIN raw: 0xf342, decoded: 208.500 W[0m
+[0;32mI (19472) nerdqaxe+: tmp1075 vs tps: 32.69 vs 36.75 (diff: 4.06)[0m
+[0;32mI (19482) power_management: vin: 12.72, iin: 16.41, pin: 208.50, vout: 1.20, iout: 151.75, pout: 182.25, vr-temp: 32.69[0m
+[0;32mI (19492) emc2302: fan speed: 2914RPM[0m
+[0;32mI (19502) emc2302: fan speed: 3204RPM[0m
+[0;32mI (19502) power_management: Temperature 0: 44.81 C[0m
+[0;32mI (19502) emc2302: setting fan 0 speed to 100.00% (0xff)[0m
+[0;32mI (19512) emc2302: setting fan 1 speed to 100.00% (0xff)[0m
+[0;32mI (19762) APIsFetcher: HTTP Status = 200, Content-Length = 6[0m
+[0;32mI (19762) APIsFetcher: Received JSON: 930083[0m
+[0;32mI (19762) APIsFetcher: Current block: 930083[0m
+[0;32mI (20042) esp-x509-crt-bundle: Certificate validated[0m
+[0;32mI (20402) APIsFetcher: HTTP Status = 200, Content-Length = 293[0m
+[0;32mI (20402) APIsFetcher: Received JSON: {"hashrates":[{"timestamp":1766793600,"avgHashrate":1.157637515718899e+21},{"timestamp":1766880000,"avgHashrate":994092685617678000000},{"timestamp":1766966400,"avgHashrate":1.1490250222081779e+21}],"difficulty":[],"currentHashrate":1.098808545239319e+21,"currentDifficulty":148258433855481.3}[0m
+[0;32mI (20422) APIsFetcher: Network hash: 1098 EH/s[0m
+[0;32mI (20432) APIsFetcher: Network difficulty: 148 T[0m
+[0;32mI (20692) esp-x509-crt-bundle: Certificate validated[0m
+[0;32mI (21042) APIsFetcher: HTTP Status = 200, Content-Length = 74[0m
+[0;32mI (21042) APIsFetcher: Received JSON: {"fastestFee":1,"halfHourFee":1,"hourFee":1,"economyFee":1,"minimumFee":1}[0m
+[0;32mI (21052) APIsFetcher: Network fees: 1, 1, 1[0m
+[0;33mW (21462) power_management: BDOC MODE: Using overheat threshold 75°C[0m
+[0;32mI (21462) TPS53647.c: PMBUS_READ_IIN raw: 0xda0d, decoded: 16.406 A[0m
+[0;32mI (21462) TPS53647.c: PMBUS_READ_PIN raw: 0xf342, decoded: 208.500 W[0m
+[0;32mI (21472) nerdqaxe+: tmp1075 vs tps: 33.19 vs 37.62 (diff: 4.44)[0m
+[0;32mI (21472) power_management: vin: 12.78, iin: 16.41, pin: 208.50, vout: 1.20, iout: 152.75, pout: 181.50, vr-temp: 33.19[0m
+[0;32mI (21492) emc2302: fan speed: 2908RPM[0m
+[0;32mI (21492) emc2302: fan speed: 3215RPM[0m
+[0;32mI (21492) power_management: Temperature 0: 45.25 C[0m
+[0;32mI (21502) emc2302: setting fan 0 speed to 100.00% (0xff)[0m
+[0;32mI (21512) emc2302: setting fan 1 speed to 100.00% (0xff)[0m
+[0;32mI (22132) http_cors: Client IP: 192.168.1.109[0m
+[0;32mI (22132) http_cors: No Origin header found, assuming direct same-client access.[0m
+[0;32mI (22132) http_cors: allowed: both IPs private[0m
+[0;32mI (22142) http_system: cur: 1767049757696[0m
+[0;32mI (22142) WIFI_RSSI: Current RSSI: -55 dBm[0m
+[0;33mW (22152) history: Invalid history indices or history not (yet) available[0m
+[0;32mI (22162) http_system: Sending networkMode to UI: wifi (raw value: 0)[0m
+[0;32mI (22952) hashrate_monitor: chip hashrates: 0.00GH/s / 0.00GH/s / 0.00GH/s / 0.00GH/s  (total: 0.000GH/s)[0m
+[0;33mW (23462) power_management: BDOC MODE: Using overheat threshold 75°C[0m
+[0;32mI (23462) TPS53647.c: PMBUS_READ_IIN raw: 0xda0d, decoded: 16.406 A[0m
+[0;32mI (23462) TPS53647.c: PMBUS_READ_PIN raw: 0xf342, decoded: 208.500 W[0m
+[0;32mI (23472) nerdqaxe+: tmp1075 vs tps: 33.50 vs 37.38 (diff: 3.88)[0m
+[0;32mI (23472) power_management: vin: 12.78, iin: 16.41, pin: 208.50, vout: 1.20, iout: 152.25, pout: 182.25, vr-temp: 33.50[0m
+[0;32mI (23492) emc2302: fan speed: 2872RPM[0m
+[0;32mI (23492) emc2302: fan speed: 3204RPM[0m
+[0;32mI (23492) power_management: Temperature 0: 45.56 C[0m
+[0;32mI (23502) emc2302: setting fan 0 speed to 100.00% (0xff)[0m
+[0;32mI (23512) emc2302: setting fan 1 speed to 100.00% (0xff)[0m
+[0;33mW (25462) power_management: BDOC MODE: Using overheat threshold 75°C[0m
+[0;32mI (25462) TPS53647.c: PMBUS_READ_IIN raw: 0xda0d, decoded: 16.406 A[0m
+[0;32mI (25462) TPS53647.c: PMBUS_READ_PIN raw: 0xf342, decoded: 208.500 W[0m
+[0;32mI (25472) nerdqaxe+: tmp1075 vs tps: 33.62 vs 38.25 (diff: 4.62)[0m
+[0;32mI (25472) power_management: vin: 12.78, iin: 16.41, pin: 208.50, vout: 1.20, iout: 152.75, pout: 182.75, vr-temp: 33.62[0m
+[0;32mI (25492) emc2302: fan speed: 2878RPM[0m
+[0;32mI (25492) emc2302: fan speed: 3199RPM[0m
+[0;32mI (25492) power_management: Temperature 0: 45.75 C[0m
+[0;32mI (25502) emc2302: setting fan 0 speed to 100.00% (0xff)[0m
+[0;32mI (25512) emc2302: setting fan 1 speed to 100.00% (0xff)[0m
+[0;32mI (27122) http_cors: Client IP: 192.168.1.109[0m
+[0;32mI (27122) http_cors: No Origin header found, assuming direct same-client access.[0m
+[0;32mI (27122) http_cors: allowed: both IPs private[0m
+[0;32mI (27132) http_system: cur: 1767049762693[0m
+[0;32mI (27142) WIFI_RSSI: Current RSSI: -55 dBm[0m
+[0;33mW (27142) history: Invalid history indices or history not (yet) available[0m
+[0;32mI (27152) http_system: Sending networkMode to UI: wifi (raw value: 0)[0m
