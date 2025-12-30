@@ -1,5 +1,7 @@
 # ESP-Miner NerdQAxePlus V3.4 - TNA Edition LAN and OVERCLOCKING READY
 
+Be Free - Use your device the way YOU wish to use it !
+
 **Version:** TNA-V3.4
 **Release Date:** December 2025
 **Platform:** ESP32-S3 (ESP-IDF v5.3.4)
