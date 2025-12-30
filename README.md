@@ -5,7 +5,9 @@ Be Free - Use your device the way YOU wish to use it !
 **Version:** TNA-V3.4
 **Release Date:** December 2025
 **Platform:** ESP32-S3 (ESP-IDF v5.3.4)
-**Hardware:** NerdQAxePlus Bitcoin Mining Board
+
+**Hardware compatible:** NerdQAxe+ , ++ , Octaxe+ , OctaxeGamma, QX. 
+
 
 ##### Support Development: <a href="https://www.molonlabe.holdings/" target="_blank">https://www.molonlabe.holdings/</a>
 
