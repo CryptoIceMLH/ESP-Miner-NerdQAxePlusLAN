@@ -1,4 +1,4 @@
-# ESP-Miner NerdQAxePlus V3.2 - TNA Edition
+# ESP-Miner NerdQAxePlus V3.4 - TNA Edition
 
 **Version:** TNA-V3.4
 **Release Date:** December 2025
