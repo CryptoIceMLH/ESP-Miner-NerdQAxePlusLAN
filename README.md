@@ -1,4 +1,4 @@
-# ESP-Miner NerdQAxePlus V3.4 - TNA Edition
+# ESP-Miner NerdQAxePlus V3.4 - TNA Edition LAN and OVERCLOCKING READY
 
 **Version:** TNA-V3.4
 **Release Date:** December 2025
