@@ -176,7 +176,131 @@
         text-align: right;
         margin-right: 16px;
     }
+}
 
+// Network Mode Buttons
+.network-mode-buttons {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+
+  button {
+    width: auto;
+    min-width: 140px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
+
+    nb-icon {
+      font-size: 1.25rem;
+    }
+  }
+}
+
+// Section Divider
+.section-divider {
+  border: none;
+  border-top: 1px solid;
+  margin: 1.5rem 0;
+}
+
+// Network Section Styles
+.network-section {
+  margin-bottom: 1.5rem;
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid;
+
+    nb-icon {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+// WiFi/Ethernet Status Display
+.wifi-status {
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-top: 1rem;
+
+  .status-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .status-label {
+      font-weight: 500;
+    }
+
+    .status-value {
+      font-weight: 600;
+
+      &.connected {
+        color: #00d68f;
+      }
+    }
+  }
+}
+
+// Static IP Section
+.static-ip-section {
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid;
+}
+
+// Toggle Wrapper
+.toggle-wrapper {
+  display: flex;
+  align-items: center;
+
+  nb-toggle {
+    margin-right: 0.5rem;
+  }
+}
+
+// Password Wrapper
+.password-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  input {
+    flex: 1;
+  }
+
+  button {
+    flex-shrink: 0;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .network-mode-buttons {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+    }
+  }
+}
+
+@include nb-install-component() {
     // BDOC Mode Styling
     .bdoc-control-row {
         margin-bottom: 20px;

@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Input, OnInit, TemplateRef } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { switchMap, forkJoin, startWith, tap, catchError, of } from 'rxjs';
+import { switchMap, forkJoin, startWith, tap, catchError, of, interval, takeUntil, Subject } from 'rxjs';
 import { LoadingService } from '../../services/loading.service';
 import { SystemService } from '../../services/system.service';
 import { eASICModel } from '../../models/enum/eASICModel';
@@ -10,6 +10,7 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { OtpAuthService, EnsureOtpResult } from '../../services/otp-auth.service';
 import { TranslateService } from '@ngx-translate/core';
 import { IStratum } from 'src/app/models/IStratum';
+import { IEthernetConfig } from '../../models/IEthernetConfig';
 
 enum SupportLevel { Safe = 0, Advanced = 1, Pro = 2 }
 
@@ -18,7 +19,7 @@ enum SupportLevel { Safe = 0, Advanced = 1, Pro = 2 }
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss']
 })
-export class EditComponent implements OnInit {
+export class EditComponent implements OnInit, OnDestroy {
   public supportLevel: SupportLevel = SupportLevel.Safe;
 
   public form!: FormGroup;
@@ -52,6 +53,18 @@ export class EditComponent implements OnInit {
   private asicVoltageValues: number[] = [];
 
   private stratum : IStratum = null;
+
+  // Ethernet state variables
+  public wifiIpv4: string = '';
+  public wifiStatus: string = '';
+  public wifiRSSI: number = -128;
+  public networkMode: string = 'wifi';
+  public ethAvailable: number = 0;
+  public ethLinkUp: number = 0;
+  public ethConnected: number = 0;
+  public ethIPv4: string = '0.0.0.0';
+  public ethMac: string = '00:00:00:00:00:00';
+  private destroy$ = new Subject<void>();
 
   // BDOC mode state
   public bdocModeEnabled: boolean = false;
@@ -90,16 +103,30 @@ export class EditComponent implements OnInit {
   ngOnInit(): void {
     forkJoin({
       info: this.systemService.getInfo(0, this.uri),
-      asic: this.systemService.getAsicInfo(this.uri)
+      asic: this.systemService.getAsicInfo(this.uri),
+      ethernet: this.systemService.getEthernetStatus(this.uri).pipe(
+        catchError(err => of(null))
+      )
     })
       .pipe(this.loadingService.lockUIUntilComplete())
-      .subscribe(({ info, asic }) => {
+      .subscribe(({ info, asic, ethernet }) => {
         this.originalSettings = structuredClone(info);
 
         // nasty work around
         this.originalSettings["poolMode"] = info.stratum?.poolMode ?? 0;
 
         this.otpEnabled = !!info.otp;
+
+        // Load Ethernet status
+        this.wifiIpv4 = info.hostip || '';
+        this.wifiStatus = info.wifiStatus || '';
+        this.wifiRSSI = info.wifiRSSI || -128;
+        this.networkMode = info.networkMode || 'wifi';
+        this.ethAvailable = info.ethAvailable || 0;
+        this.ethLinkUp = info.ethLinkUp || 0;
+        this.ethConnected = info.ethConnected || 0;
+        this.ethIPv4 = info.ethIPv4 || '0.0.0.0';
+        this.ethMac = info.ethMac || '00:00:00:00:00:00';
 
         // Load BDOC mode state
         this.bdocModeEnabled = info.bdocMode ?? false;
@@ -234,15 +261,29 @@ export class EditComponent implements OnInit {
             Validators.required,
           ]],
           otpEnabled: [info.otp],
+          // Ethernet configuration
+          ethUseDHCP: [ethernet?.ethUseDHCP ?? 1, []],
+          ethStaticIP: [ethernet?.ethStaticIP ?? '', [Validators.pattern(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)]],
+          ethGateway: [ethernet?.ethGateway ?? '', [Validators.pattern(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)]],
+          ethSubnet: [ethernet?.ethSubnet ?? '', [Validators.pattern(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)]],
+          ethDNS: [ethernet?.ethDNS ?? '', [Validators.pattern(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)]],
         });
 
         this.stratum = info.stratum;
+
+        // If BDOC mode is already enabled on page load, remove voltage/frequency validators
+        if (this.bdocModeEnabled) {
+          this.removeBdocValidators();
+        }
 
         this.form.controls['autofanspeed'].valueChanges
           .pipe(startWith(this.form.controls['autofanspeed'].value))
           .subscribe(() => this.updatePIDFieldStates());
 
         this.updatePIDFieldStates();
+
+        // Start periodic network status refresh
+        this.startNetworkStatusRefresh();
       });
   }
 
@@ -300,7 +341,32 @@ export class EditComponent implements OnInit {
       form.totp = this.pendingTotp;
     }
 
-    return this.systemService.updateSystem(this.uri, form, totp)
+    // Extract Ethernet config if present
+    const ethConfig = {
+      ethUseDHCP: form.ethUseDHCP ? 1 : 0,
+      ethStaticIP: form.ethStaticIP || '',
+      ethGateway: form.ethGateway || '',
+      ethSubnet: form.ethSubnet || '',
+      ethDNS: form.ethDNS || ''
+    };
+
+    // Remove Ethernet fields from main form (they have separate endpoint)
+    delete form.ethUseDHCP;
+    delete form.ethStaticIP;
+    delete form.ethGateway;
+    delete form.ethSubnet;
+    delete form.ethDNS;
+
+    // Update main system settings
+    return this.systemService.updateSystem(this.uri, form, totp).pipe(
+      switchMap(() => {
+        // Also update Ethernet config if available
+        if (this.ethAvailable) {
+          return this.systemService.updateEthernetConfig(this.uri, ethConfig, totp);
+        }
+        return of(null);
+      })
+    );
   }
 
   get requiresReboot(): boolean {
@@ -678,6 +744,65 @@ export class EditComponent implements OnInit {
   }
 
   /**
+   * Switch between WiFi and Ethernet network modes
+   */
+  public switchNetworkMode(mode: string): void {
+    this.otpAuth.ensureOtp$(
+      this.uri,
+      this.translate.instant('SECURITY.OTP_TITLE'),
+      this.translate.instant('NETWORK.SWITCH_MODE_HINT')
+    )
+      .pipe(
+        switchMap(({ totp }: EnsureOtpResult) =>
+          this.systemService.switchNetworkMode(this.uri, mode, totp).pipe(
+            this.loadingService.lockUIUntilComplete()
+          )
+        )
+      )
+      .subscribe({
+        next: () => {
+          this.toastrService.success(
+            this.translate.instant('NETWORK.MODE_SWITCHED'),
+            this.translate.instant('NETWORK.RESTART_REQUIRED')
+          );
+        },
+        error: (err: HttpErrorResponse) => {
+          this.toastrService.danger(
+            this.translate.instant('COMMON.ERROR'),
+            this.translate.instant('NETWORK.MODE_SWITCH_FAILED') + ` ${err.message}`
+          );
+        }
+      });
+  }
+
+  /**
+   * Poll network status every 5 seconds to update WiFi/Ethernet connection info
+   */
+  private startNetworkStatusRefresh(): void {
+    // Poll network status every 5 seconds
+    interval(5000)
+      .pipe(
+        startWith(0),
+        switchMap(() => this.systemService.getInfo(0, this.uri)),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (info) => {
+          this.wifiIpv4 = info.hostip || '';
+          this.wifiStatus = info.wifiStatus || '';
+          this.wifiRSSI = info.wifiRSSI || -128;
+          this.networkMode = info.networkMode || 'wifi';
+          this.ethAvailable = info.ethAvailable || 0;
+          this.ethLinkUp = info.ethLinkUp || 0;
+          this.ethConnected = info.ethConnected || 0;
+          this.ethIPv4 = info.ethIPv4 || '0.0.0.0';
+          this.ethMac = info.ethMac || '00:00:00:00:00:00';
+        },
+        error: (err) => console.error('Network status refresh error:', err)
+      });
+  }
+
+  /**
    * Helper: Remove validators for BDOC mode
    */
   private removeBdocValidators(): void {
@@ -716,6 +841,11 @@ export class EditComponent implements OnInit {
     } else if (currentVolt < 1005) {
       this.form.controls['coreVoltage'].setValue(1005);
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
 
